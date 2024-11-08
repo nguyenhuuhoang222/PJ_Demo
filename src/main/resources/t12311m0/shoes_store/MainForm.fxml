@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import java.lang.String?>
+<?import javafx.scene.chart.AreaChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.StackedBarChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="t12311m0.shoes_store.MainFormController">
+   <children>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <BorderPane layoutX="350.0" layoutY="200.0" prefHeight="600.0" prefWidth="1100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <left>
+                  <AnchorPane prefHeight="600.0" prefWidth="223.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <AnchorPane layoutX="32.0" layoutY="147.0" prefHeight="600.0" prefWidth="246.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <AnchorPane prefHeight="600.0" prefWidth="224.0" styleClass="nav-form" stylesheets="@MainForm.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <AnchorPane prefHeight="106.0" prefWidth="224.0" styleClass="header" stylesheets="@MainForm.css">
+                                       <children>
+                                          <ImageView fitHeight="188.0" fitWidth="170.0" layoutX="27.0" layoutY="-14.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@image/Black_Logo-removebg-preview.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Label fx:id="accName" layoutX="14.0" layoutY="148.0" />
+                                       </children>
+                                    </AnchorPane>
+                                    <Button fx:id="r_r_btn" layoutX="17.0" layoutY="180.0" mnemonicParsing="false" onAction="#showMainPage" prefHeight="40.0" prefWidth="190.0" styleClass="nav-btn" stylesheets="@MainForm.css" text="Dash Board" />
+                                    <Button fx:id="m_f_btn" layoutX="16.0" layoutY="352.0" mnemonicParsing="false" onAction="#showCustomerManagementPage" prefHeight="40.0" prefWidth="190.0" styleClass="nav-btn" stylesheets="@MainForm.css" text="Manage Customer" />
+                                    <Button layoutX="16.0" layoutY="292.0" mnemonicParsing="false" onAction="#showProductManagementPage" prefHeight="40.0" prefWidth="190.0" styleClass="nav-btn" stylesheets="@MainForm.css" text="Manage Product" />
+                                    <Button fx:id="m_e_btn" layoutX="17.0" layoutY="233.0" mnemonicParsing="false" onAction="#showEmployeeManagementPage" prefHeight="40.0" prefWidth="190.0" styleClass="nav-btn" stylesheets="@MainForm.css" text="Manage Employee" />
+                                    <Button fx:id="logoutButton" layoutX="3.0" layoutY="580.0" mnemonicParsing="false" onAction="#logout" prefHeight="26.0" prefWidth="41.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="3.0">
+                                       <graphic>
+                                          <FontAwesomeIcon glyphName="SIGN_OUT" styleClass="nav-btn" />
+                                       </graphic>
+                                    </Button>
+                                    <Label layoutX="51.0" layoutY="577.0" style="-fx-text-fill: white;" text="Sign Out" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="51.0" />
+                                    <Separator layoutX="-1.0" layoutY="115.0" prefHeight="10.0" prefWidth="224.0" />
+                                    <Button layoutX="16.0" layoutY="406.0" mnemonicParsing="false" onAction="#showBrandManagementPage" prefHeight="40.0" prefWidth="190.0" styleClass="nav-btn" stylesheets="@MainForm.css" text="Manage Brand" />
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </AnchorPane>
+               </left>
+               <center>
+                  <AnchorPane prefHeight="600.0" prefWidth="877.0" stylesheets="@MainForm.css" BorderPane.alignment="CENTER">
+                     <children>
+                        <AnchorPane fx:id="mainpage" layoutX="-3.0" layoutY="200.0" prefHeight="600.0" prefWidth="865.0" styleClass="nav-form" stylesheets="@MainForm.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-23.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <AnchorPane layoutX="32.0" layoutY="14.0" prefHeight="149.0" prefWidth="823.0" stylesheets="@MainForm.css" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+                                 <styleClass>
+                                    <String fx:value="white-bg" />
+                                    <String fx:value="radius" />
+                                 </styleClass>
+                                 <children>
+                                    <ScrollPane layoutX="10.0" layoutY="-15.0" prefHeight="110.0" prefWidth="823.0" styleClass="transparent" stylesheets="@MainForm.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <content>
+                                          <AnchorPane prefHeight="132.0" prefWidth="1000.0" styleClass="nav-scroll" stylesheets="@MainForm.css">
+                                             <children>
+                                                <AnchorPane layoutX="14.0" layoutY="5.0" prefHeight="122.0" prefWidth="189.0" styleClass="nav-form-small" stylesheets="@MainForm.css">
+                                                   <children>
+                                                      <FontAwesomeIcon fill="WHITE" glyphName="USERS" layoutX="14.0" layoutY="47.0" selectionFill="#fffdfd" size="3em" />
+                                                      <Label layoutX="35.0" layoutY="85.0" text="The Amount of Customer" textFill="WHITE" />
+                                                      <Label layoutX="143.0" layoutY="14.0" text="0" textFill="#f5f5f5" />
+                                                   </children></AnchorPane>
+                                                <AnchorPane layoutX="220.0" layoutY="5.0" prefHeight="122.0" prefWidth="189.0" styleClass="nav-form-small" stylesheets="@MainForm.css">
+                                                   <children>
+                                                      <Label layoutX="35.0" layoutY="85.0" text="Today's Income" textFill="WHITE" />
+                                                      <Label layoutX="143.0" layoutY="14.0" text="0" textFill="#f5f5f5" />
+                                                      <FontAwesomeIcon fill="WHITE" glyphName="MONEY" layoutX="14.0" layoutY="44.0" size="3em" wrappingWidth="45.928571701049805" />
+                                                   </children>
+                                                </AnchorPane>
+                                                <AnchorPane layoutX="431.0" layoutY="5.0" prefHeight="122.0" prefWidth="189.0" styleClass="nav-form-small" stylesheets="@MainForm.css">
+                                                   <children>
+                                                      <Label layoutX="34.0" layoutY="85.0" text="Total Income" textFill="WHITE" />
+                                                      <Label layoutX="143.0" layoutY="14.0" text="0" textFill="#f5f5f5" />
+                                                      <FontAwesomeIcon fill="WHITE" glyphName="DOLLAR" layoutX="23.0" layoutY="44.0" size="3em" wrappingWidth="24.428571224212646" />
+                                                   </children>
+                                                </AnchorPane>
+                                                <AnchorPane layoutX="652.0" layoutY="5.0" prefHeight="122.0" prefWidth="189.0" styleClass="nav-form-small" stylesheets="@MainForm.css">
+                                                   <children>
+                                                      <Label layoutX="24.0" layoutY="85.0" text="The Amount of Sold Product" textFill="WHITE" />
+                                                      <Label layoutX="143.0" layoutY="14.0" text="0" textFill="#f5f5f5" />
+                                                      <FontAwesomeIcon fill="WHITE" glyphName="SHOPPING_CART" layoutX="17.0" layoutY="44.0" size="3em" />
+                                                   </children>
+                                                </AnchorPane>
+                                             </children>
+                                          </AnchorPane>
+                                       </content>
+                                    </ScrollPane>
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane layoutX="29.0" layoutY="175.0" prefHeight="375.0" prefWidth="830.0" stylesheets="@MainForm.css" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="211.0">
+                                 <styleClass>
+                                    <String fx:value="white-bg" />
+                                    <String fx:value="radius" />
+                                 </styleClass>
+                                 <children>
+                                    <AnchorPane layoutX="14.0" layoutY="15.0" prefHeight="344.0" prefWidth="467.0" stylesheets="@MainForm.css" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="368.0" AnchorPane.topAnchor="15.0">
+                                       <styleClass>
+                                          <String fx:value="radius" />
+                                          <String fx:value="shadow" />
+                                          <String fx:value="white-bg" />
+                                       </styleClass>
+                                       <children>
+                                          <AreaChart layoutX="-18.0" layoutY="-11.0" prefHeight="344.0" prefWidth="467.0" title="Today Income's Chart" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <xAxis>
+                                              <CategoryAxis side="BOTTOM" />
+                                            </xAxis>
+                                            <yAxis>
+                                              <NumberAxis side="LEFT" />
+                                            </yAxis>
+                                          </AreaChart>
+                                       </children>
+                                    </AnchorPane>
+                                    <AnchorPane layoutX="341.0" layoutY="15.0" prefHeight="344.0" prefWidth="336.0" stylesheets="@MainForm.css" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="15.0">
+                                       <styleClass>
+                                          <String fx:value="radius" />
+                                          <String fx:value="shadow" />
+                                          <String fx:value="white-bg" />
+                                       </styleClass>
+                                       <children>
+                                          <StackedBarChart layoutX="-89.0" layoutY="-21.0" prefHeight="344.0" prefWidth="336.0" title=" Customer's Chart" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <xAxis>
+                                              <CategoryAxis side="BOTTOM" />
+                                            </xAxis>
+                                            <yAxis>
+                                              <NumberAxis prefHeight="303.0" prefWidth="70.0" side="LEFT" />
+                                            </yAxis>
+                                          </StackedBarChart>
+                                       </children>
+                                    </AnchorPane>
+                                 </children>
+                              </AnchorPane>
+                              <Separator layoutX="16.0" layoutY="187.0" prefHeight="6.0" prefWidth="846.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="187.0" />
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="productManagementPage" prefHeight="600.0" prefWidth="876.0" styleClass="nav-form" stylesheets="@MainForm.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <AnchorPane fx:id="employeeManagementPage" layoutX="14.0" layoutY="14.0" prefHeight="321.0" prefWidth="843.0" stylesheets="@MainForm.css" AnchorPane.bottomAnchor="265.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="19.0" AnchorPane.topAnchor="14.0">
+                                 <styleClass>
+                                    <String fx:value="shadow" />
+                                    <String fx:value="white-bg" />
+                                    <String fx:value="radius" />
+                                 </styleClass>
+                                 <children>
+                                    <TableView fx:id="productTableView" layoutX="9.0" layoutY="10.0" onMouseClicked="#handleRowSelect" prefHeight="379.0" prefWidth="826.0" styleClass="radius" stylesheets="@MainForm.css" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="9.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="10.0">
+                                       <columns>
+                                          <TableColumn fx:id="colId" prefWidth="66.5" text="ID" />
+                                          <TableColumn fx:id="colName" prefWidth="164.5" text="Name" />
+                                          <TableColumn fx:id="colPrice" prefWidth="71.0" text="Price" />
+                                          <TableColumn fx:id="colQuantity" prefWidth="86.0" text="Quantity" />
+                                          <TableColumn fx:id="colBrand" prefWidth="62.0" text="Brand" />
+                                          <TableColumn fx:id="colDescription" prefWidth="174.0" text="Description" />
+                                          <TableColumn fx:id="colImage" prefWidth="144.0" text="Image" />
+                                          <TableColumn fx:id="colSize" prefWidth="84.0" text="Size" />
+                                       </columns>
+                                       <columnResizePolicy>
+                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                       </columnResizePolicy>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane layoutX="17.0" layoutY="433.0" prefHeight="243.0" prefWidth="843.0" stylesheets="@MainForm.css" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="17.0" AnchorPane.rightAnchor="16.0">
+                                 <styleClass>
+                                    <String fx:value="shadow" />
+                                    <String fx:value="radius" />
+                                    <String fx:value="white-bg" />
+                                    <String fx:value="nav-form-small" />
+                                 </styleClass>
+                                 <children>
+                                    <Label layoutX="39.0" layoutY="23.0" text="Product Name:" textFill="WHITE" />
+                                    <TextField fx:id="productNameFd" layoutX="129.0" layoutY="19.0" />
+                                    <Label layoutX="79.0" layoutY="64.0" text="Price :" textFill="WHITE" />
+                                    <TextField fx:id="productPriceFd" layoutX="131.0" layoutY="59.0" prefHeight="26.0" prefWidth="155.0" promptText="0.00$" />
+                                    <TextField fx:id="productQuantityFd" layoutX="131.0" layoutY="99.0" prefHeight="26.0" prefWidth="155.0" promptText="0" />
+                                    <Label layoutX="71.0" layoutY="104.0" text="Quantity:" textFill="WHITE" />
+                                    <Label layoutX="314.0" layoutY="24.0" text="Desciption:" textFill="WHITE" />
+                                    <TextArea fx:id="productDescription" layoutX="386.0" layoutY="12.0" prefHeight="155.0" prefWidth="200.0" stylesheets="@MainForm.css">
+                                       <styleClass>
+                                          <String fx:value="radius" />
+                                          <String fx:value="shadow" />
+                                          <String fx:value="white-bg" />
+                                       </styleClass>
+                                    </TextArea>
+                                    <Label layoutX="78.0" layoutY="146.0" text="Brand:" textFill="WHITE" />
+                                    <AnchorPane layoutX="633.0" layoutY="20.0" prefHeight="111.0" prefWidth="184.0" stylesheets="@MainForm.css" AnchorPane.rightAnchor="26.0">
+                                       <styleClass>
+                                          <String fx:value="white-bg" />
+                                          <String fx:value="shadow" />
+                                       </styleClass>
+                                       <children>
+                                          <ImageView fx:id="productImageView" fitHeight="111.0" fitWidth="184.0" layoutX="5.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
+                                             <styleClass>
+                                                <String fx:value="white-bg" />
+                                                <String fx:value="radius" />
+                                             </styleClass>
+                                          </ImageView>
+                                       </children>
+                                    </AnchorPane>
+                                    <Button fx:id="Product_importBtn" layoutX="677.0" layoutY="140.0" mnemonicParsing="false" onAction="#importImage" styleClass="nav-btn" stylesheets="@MainForm.css" text="Import Image" AnchorPane.rightAnchor="69.5" />
+                                    <Button fx:id="Product_addBtn" layoutX="340.0" layoutY="193.0" mnemonicParsing="false" onAction="#addProduct" styleClass="nav-btn" stylesheets="@MainForm.css" text="Add Product" />
+                                    <Button fx:id="Product_updateBtn" layoutX="438.0" layoutY="193.0" mnemonicParsing="false" onAction="#updateProduct" styleClass="nav-btn" stylesheets="@MainForm.css" text="Update Product" AnchorPane.bottomAnchor="22.0" />
+                                    <Button fx:id="Product_clearBtn" layoutX="562.0" layoutY="193.0" mnemonicParsing="false" onAction="#clearForm" styleClass="nav-btn" stylesheets="@MainForm.css" text="Clear Product" AnchorPane.bottomAnchor="22.0" />
+                                    <Button fx:id="Product_deleteBtn" layoutX="672.0" layoutY="193.0" mnemonicParsing="false" onAction="#deleteProduct" styleClass="nav-btn" stylesheets="@MainForm.css" text="Delete Product" AnchorPane.bottomAnchor="22.0" />
+                                    <Label layoutX="83.0" layoutY="185.0" text="Size:" textFill="WHITE" />
+                                    <ComboBox fx:id="productSizeComboBox" layoutX="131.0" layoutY="180.0" prefHeight="26.0" prefWidth="157.0" promptText="Choose Size" />
+                                    <ComboBox fx:id="productBrandComboBox" layoutX="129.0" layoutY="142.0" prefHeight="26.0" prefWidth="159.0" promptText="Choose Brand" />
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="employeeManagementPage" layoutX="338.0" layoutY="200.0" prefHeight="600.0" prefWidth="876.0" styleClass="nav-form" stylesheets="@MainForm.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <AnchorPane layoutX="14.0" layoutY="63.0" prefHeight="475.0" prefWidth="256.0" stylesheets="@MainForm.css" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="63.0">
+                                 <styleClass>
+                                    <String fx:value="white-bg" />
+                                    <String fx:value="shadow" />
+                                    <String fx:value="radius" />
+                                    <String fx:value="nav-form-small" />
+                                 </styleClass>
+                                 <children>
+                                    <Label layoutX="16.0" layoutY="35.0" prefWidth="39.0" text="Name" textFill="WHITE" AnchorPane.leftAnchor="16.0" />
+                                    <Label layoutX="16.0" layoutY="91.0" text="Email" textFill="WHITE" AnchorPane.leftAnchor="16.0" />
+                                    <Label layoutX="16.0" layoutY="146.0" text="Password" textFill="WHITE" AnchorPane.leftAnchor="16.0" />
+                                    <Label layoutX="18.0" layoutY="205.0" text="Phone" textFill="WHITE" AnchorPane.leftAnchor="18.0" />
+                                    <TextField fx:id="employeeNameFd" layoutX="14.0" layoutY="59.0" promptText="Employee Name" />
+                                    <TextField fx:id="employeeEmailFd" layoutX="14.0" layoutY="114.0" promptText="Employee Email" />
+                                    <TextField fx:id="employeePhoneFd" layoutX="14.0" layoutY="229.0" promptText="Employee Phone" AnchorPane.leftAnchor="14.0" />
+                                    <PasswordField fx:id="employeePasswordFd" layoutX="14.0" layoutY="169.0" promptText="Employee Pasword" AnchorPane.leftAnchor="14.0" />
+                                    <Button fx:id="employeeAddbtn" layoutX="137.0" layoutY="368.0" mnemonicParsing="false" onAction="#addEmployee" prefHeight="28.0" prefWidth="77.0" styleClass="nav-btn" text="Add" />
+                                    <Button fx:id="employeeDeletebtn" layoutX="17.0" layoutY="418.0" mnemonicParsing="false" onAction="#deleteEmployee" prefHeight="28.0" prefWidth="76.0" styleClass="nav-btn" text="Delete" />
+                                    <Button fx:id="employeeUpdatebtn" layoutX="17.0" layoutY="368.0" mnemonicParsing="false" onAction="#updateEmployee" prefHeight="28.0" prefWidth="77.0" styleClass="nav-btn" text="Update" />
+                                    <Button fx:id="employeeClearbtn" layoutX="136.0" layoutY="418.0" mnemonicParsing="false" onAction="#clearEmployeeForm" prefHeight="28.0" prefWidth="78.0" styleClass="nav-btn" text="Clear" />
+                                    <Label layoutX="53.0" layoutY="14.0" prefHeight="20.0" prefWidth="178.0" text="Employee Management" textFill="WHITE">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="16.0" layoutY="272.0" text="Gender" textFill="WHITE" />
+                                    <ChoiceBox fx:id="employeeGenderDd" layoutX="13.0" layoutY="289.0" prefHeight="26.0" prefWidth="160.0" />
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane layoutX="282.0" layoutY="23.0" prefHeight="559.0" prefWidth="580.0" stylesheets="@MainForm.css" AnchorPane.bottomAnchor="18.0" AnchorPane.leftAnchor="282.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="23.0">
+                                 <styleClass>
+                                    <String fx:value="white-bg" />
+                                    <String fx:value="transparent" />
+                                    <String fx:value="shadow" />
+                                    <String fx:value="radius" />
+                                 </styleClass>
+                                 <children>
+                                    <TableView fx:id="employeeTableView" layoutX="-53.0" layoutY="-60.0" onMouseClicked="#handleEmployeeRowSelect" prefHeight="568.0" prefWidth="578.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <columns>
+                                          <TableColumn fx:id="col_EmployeeId" prefWidth="75.0" text="Id" />
+                                          <TableColumn fx:id="col_EmployeeName" prefWidth="115.0" text="Name" />
+                                          <TableColumn fx:id="col_EmployeeEmail" prefWidth="150.0" text="Email" />
+                                          <TableColumn fx:id="col_EmployeePassword" prefWidth="75.0" text="Password" />
+                                          <TableColumn fx:id="col_EmployeePhone" prefWidth="139.5" text="Phone" />
+                                          <TableColumn fx:id="col_EmployeeGender" prefWidth="75.0" text="Gender" />
+                                       </columns>
+                                       <styleClass>
+                                          <String fx:value="radius" />
+                                          <String fx:value="white-bg" />
+                                          <String fx:value="transparent" />
+                                       </styleClass>
+                                       <columnResizePolicy>
+                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                       </columnResizePolicy>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="customerManagementPage" layoutX="5.0" layoutY="5.0" prefHeight="605.0" prefWidth="881.0" styleClass="nav-form" stylesheets="@MainForm.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="321.0" prefWidth="843.0" stylesheets="@MainForm.css" AnchorPane.bottomAnchor="265.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="19.0" AnchorPane.topAnchor="14.0">
+                                 <styleClass>
+                                    <String fx:value="shadow" />
+                                    <String fx:value="white-bg" />
+                                    <String fx:value="radius" />
+                                 </styleClass>
+                                 <children>
+                                    <TableView fx:id="customerTableView" layoutX="9.0" layoutY="10.0" onMouseClicked="#handleCustomerRowSelect" prefHeight="300.0" prefWidth="826.0" styleClass="radius" stylesheets="@MainForm.css" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="9.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="10.0">
+                                       <columns>
+                                          <TableColumn fx:id="col_CustomerId" prefWidth="66.5" text="ID" />
+                                          <TableColumn fx:id="col_CustomerName" prefWidth="164.5" text="Name" />
+                                          <TableColumn fx:id="col_CustomerGender" prefWidth="86.0" text="Gender" />
+                                          <TableColumn fx:id="col_CustomerEmail" prefWidth="205.0" text="Email" />
+                                          <TableColumn fx:id="col_CustomerPhone" prefWidth="164.0" text="Phone" />
+                                       </columns>
+                                       <columnResizePolicy>
+                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                       </columnResizePolicy>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane layoutX="17.0" layoutY="433.0" prefHeight="243.0" prefWidth="843.0" stylesheets="@MainForm.css" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="17.0" AnchorPane.rightAnchor="16.0">
+                                 <styleClass>
+                                    <String fx:value="shadow" />
+                                    <String fx:value="radius" />
+                                    <String fx:value="white-bg" />
+                                    <String fx:value="nav-form-small" />
+                                 </styleClass>
+                                 <children>
+                                    <Label layoutX="14.0" layoutY="24.0" text=" Name:" textFill="WHITE" />
+                                    <TextField fx:id="customerNameFd" layoutX="67.0" layoutY="20.0" />
+                                    <TextField fx:id="customerEmailFd" layoutX="308.0" layoutY="21.0" prefHeight="26.0" prefWidth="155.0" promptText="Customer@gmail.com" />
+                                    <Label layoutX="255.0" layoutY="24.0" text="Email:" textFill="WHITE" />
+                                    <TextField fx:id="customerPhoneFd" layoutX="68.0" layoutY="61.0" prefHeight="26.0" prefWidth="158.0" promptText="84+" />
+                                    <Label layoutX="15.0" layoutY="65.0" text="Phone:" textFill="WHITE" />
+                                    <Button layoutX="33.0" layoutY="193.0" mnemonicParsing="false" onAction="#addCustomer" styleClass="nav-btn" stylesheets="@MainForm.css" text="Add Customer" />
+                                    <Button layoutX="164.0" layoutY="193.0" mnemonicParsing="false" onAction="#updateCustomer" styleClass="nav-btn" stylesheets="@MainForm.css" text="Update Customer" AnchorPane.bottomAnchor="22.0" />
+                                    <Button layoutX="311.0" layoutY="193.0" mnemonicParsing="false" onAction="#clearCustomerForm" styleClass="nav-btn" stylesheets="@MainForm.css" text="Clear Customer" AnchorPane.bottomAnchor="22.0" />
+                                    <Label layoutX="250.0" layoutY="66.0" text="Gender:" textFill="WHITE" />
+                                    <ComboBox fx:id="customerGenderDd" layoutX="308.0" layoutY="62.0" prefHeight="26.0" prefWidth="154.0" promptText="Male or Female" />
+                                    <ImageView fitHeight="194.0" fitWidth="245.0" layoutX="582.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@image/Black_Logo-removebg-preview.png" />
+                                       </image>
+                                    </ImageView>
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="brandManagementPage" prefHeight="600.0" prefWidth="876.0" styleClass="nav-form" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <AnchorPane layoutX="14.0" layoutY="22.0" prefHeight="165.0" prefWidth="291.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="22.0">
+                                 <styleClass>
+                                    <String fx:value="shadow" />
+                                    <String fx:value="white-bg" />
+                                    <String fx:value="radius" />
+                                    <String fx:value="nav-form-small" />
+                                 </styleClass>
+                                 <children>
+                                    <Label layoutX="62.0" layoutY="14.0" text="Brand Management" textFill="WHITE">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="11.0" layoutY="63.0" text="Name:" textFill="WHITE">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="brandNameFd" layoutX="67.0" layoutY="59.0" prefHeight="26.0" prefWidth="156.0" />
+                                    <Button layoutX="112.0" layoutY="123.0" mnemonicParsing="false" onAction="#addBrand" prefHeight="28.0" prefWidth="65.0" styleClass="nav-btn" text="Add" />
+                                    <Button layoutX="30.0" layoutY="123.0" mnemonicParsing="false" onAction="#updateBrand" prefHeight="28.0" prefWidth="65.0" styleClass="nav-btn" text="Update" />
+                                    <Button layoutX="195.0" layoutY="123.0" mnemonicParsing="false" onAction="#deleteBrand" prefHeight="28.0" prefWidth="65.0" styleClass="nav-btn" text="Delete" />
+                                    <Button layoutX="235.0" layoutY="58.0" mnemonicParsing="false" onAction="#clearBrandForm" prefHeight="28.0" prefWidth="51.0" styleClass="nav-btn" text="Clear" />
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane layoutX="14.0" layoutY="200.0" prefHeight="376.0" prefWidth="803.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="199.0">
+                                 <styleClass>
+                                    <String fx:value="shadow" />
+                                    <String fx:value="radius" />
+                                    <String fx:value="white-bg" />
+                                 </styleClass>
+                                 <children>
+                                    <TableView fx:id="brandTableView" layoutX="-69.0" layoutY="19.0" onMouseClicked="#handleBrandRowSelect" prefHeight="377.0" prefWidth="458.0" styleClass="radius" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <columns>
+                                          <TableColumn fx:id="col_BrandId" prefWidth="47.0" text="ID" />
+                                          <TableColumn fx:id="col_BrandName" prefWidth="203.0" text="Name" />
+                                          <TableColumn fx:id="col_CreatedAt" prefWidth="218.0" text="created_at" />
+                                          <TableColumn fx:id="col_UpdatedAt" prefWidth="220.5" text="updated_at" />
+                                          <TableColumn fx:id="col_ProductCount" minWidth="0.0" prefWidth="113.0" text="Product of Brand" />
+                                       </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                              <ImageView fitHeight="167.0" fitWidth="200.0" layoutX="325.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true" styleClass="radius" AnchorPane.leftAnchor="325.0" AnchorPane.topAnchor="22.0">
+                                 <image>
+                                    <Image url="@image/Black_Logo-removebg-preview.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </AnchorPane>
+               </center>
+            </BorderPane>
+         </children>
+      </AnchorPane>
+   </children>
+</StackPane>

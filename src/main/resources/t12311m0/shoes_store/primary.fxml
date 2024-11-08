@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="t12311m0.shoes_store.PrimaryController">
+    <children>
+        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+            <children>
+                <AnchorPane layoutX="300.0" prefHeight="400.0" prefWidth="300.0" stylesheets="@Login.css">
+                    <children>
+                        <Label layoutX="65.0" layoutY="68.0" text="Login Admin Account " />
+                        <TextField fx:id="ad_username" layoutX="40.0" layoutY="124.0" prefHeight="30.0" prefWidth="220.0" promptText="UserName" />
+                        <PasswordField fx:id="ad_password" layoutX="40.0" layoutY="170.0" prefHeight="30.0" prefWidth="220.0" promptText="Password" />
+                        <Button fx:id="ad_login" layoutX="40.0" layoutY="228.0" mnemonicParsing="false" onAction="#loginAdmin" prefHeight="43.0" prefWidth="220.0" text="Login for Admin" />
+                        <FontAwesomeIcon glyphName="USER" layoutX="140.0" layoutY="64.0" size="2em" />
+                        <Hyperlink fx:id="ad_forgot" layoutX="40.0" layoutY="204.0" text="ForgotPassword ?" />
+                    </children>
+                </AnchorPane>
+                <AnchorPane layoutY="5.0" prefHeight="400.0" prefWidth="300.0" stylesheets="@Login.css">
+                    <children>
+                        <Label layoutX="65.0" layoutY="68.0" text="Login Staff Account " />
+                        <TextField fx:id="sf_username" layoutX="40.0" layoutY="124.0" prefHeight="30.0" prefWidth="220.0" promptText="UserName" />
+                        <PasswordField fx:id="staff_password" layoutX="40.0" layoutY="170.0" prefHeight="30.0" prefWidth="220.0" promptText="Password" />
+                        <Button fx:id="sf_login" layoutX="40.0" layoutY="228.0" mnemonicParsing="false" onAction="#loginEmployee" prefHeight="43.0" prefWidth="220.0" text="Login for Staff" />
+                        <FontAwesomeIcon glyphName="USERS" layoutX="130.0" layoutY="64.0" size="2em" text="" />
+                        <Hyperlink fx:id="sf_forgot" layoutX="40.0" layoutY="204.0" text="ForgotPassword ?" />
+                    </children>
+                </AnchorPane>
+                <AnchorPane fx:id="side_form" prefHeight="400.0" prefWidth="305.0" styleClass="gradient" stylesheets="@Login.css">
+                    <children>
+                        <Button fx:id="moveToStaff" layoutX="42.0" layoutY="335.0" mnemonicParsing="false" onAction="#switchToSecondary" prefHeight="43.0" prefWidth="220.0" text="Login for staff" />
+                        <FontAwesomeIcon glyphName="USERS" layoutX="135.0" layoutY="300.0" size="2em" text="" />
+                        <Label layoutX="73.0" layoutY="304.0" text="Login Staff Account" />
+                        <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="75.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@image/Logo.png" />
+                            </image>
+                        </ImageView>
+                        <Label layoutX="36.0" layoutY="214.0" text="Shoe Store Management System" />
+                        <Button fx:id="moveToAdmin" layoutX="43.0" layoutY="335.0" mnemonicParsing="false" onAction="#switchToSecondary" prefHeight="43.0" prefWidth="220.0" text="Login for admin" visible="false" />
+                    </children>
+                </AnchorPane>
+            </children>
+        </AnchorPane>
+    </children>
+</StackPane>

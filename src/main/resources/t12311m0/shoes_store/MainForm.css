@@ -1,0 +1,80 @@
+.nav-form{
+    -fx-background-color: linear-gradient(to bottom,#235347, #8eb69b); /* Gradient từ xám sang trắng */
+}
+
+
+.header {
+    -fx-background-color: 235347; /* Xám */
+}
+
+.nav-form {
+    -fx-border-color: #808080; /* Xám */
+    -fx-border-width: 0 0 .8px 0;
+}
+
+.nav-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: white; /* Xám */
+    -fx-border-width: .4px;
+    -fx-cursor: hand;
+    -fx-text-fill: white; /* Xám */
+    -fx-font-size: 14px;
+}
+
+.nav-btn:hover {
+    -fx-background-color: #808080; /* Xám */
+    -fx-text-fill: #fff; /* Đổi thành trắng khi hover */
+}
+
+.logout {
+    -fx-background-color: #D3D3D3; /* Xám nhạt */
+    -fx-padding: 5px;
+    -fx-cursor: hand;
+    -fx-background-radius: 50px;
+}
+
+.shadow {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 5, 0, 0, 0);
+}
+
+.white-bg {
+    -fx-background-color: white; /* Xám nhạt */
+}
+
+.radius {
+    -fx-background-radius: 10px;
+}
+
+.transparent {
+    -fx-background-color: transparent;
+}
+
+.nav-form-small {
+    -fx-background-color: #235347; /* Màu nền */
+    -fx-background-radius: 10px; /* Bo tròn góc nền */
+    -fx-border-radius: 10px; /* Bo tròn góc viền nếu có viền */
+}
+
+.table-view {
+    -fx-background-color: #ffffff; /* Màu nền trắng cho bảng */
+    -fx-padding: 0;
+    -fx-border-color: #235347;
+    -fx-border-radius: 5px;
+    -fx-border-width: 1.5px;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #235347; /* Màu nền cho tiêu đề cột */
+    -fx-background-radius: 5px 5px 0 0;
+    -fx-background-insets: 0;
+}
+
+.table-view .column-header, .filter {
+    -fx-background-color: transparent;
+    -fx-pref-height: 40px;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #ffffff; /* Màu chữ trắng cho tiêu đề */
+}
+
