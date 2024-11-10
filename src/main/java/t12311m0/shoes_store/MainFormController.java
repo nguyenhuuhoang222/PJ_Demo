@@ -43,6 +43,9 @@ private TableColumn<Employee, String> col_EmployeePassword;
 private TableColumn<Employee, String> col_EmployeePhone;
 @FXML
 private TableColumn<Employee, String> col_EmployeeGender;
+    @FXML
+    private TableColumn<Employee, String> col_EmployeeStatus;
+
 
 @FXML
 private TextField employeeNameFd;
@@ -727,7 +730,7 @@ private boolean updateProductInDatabase(Product updatedProduct, String oldProduc
 
 
 //EMployee
-   @FXML
+@FXML
 public void addEmployee() {
     String name = employeeNameFd.getText();
     String email = employeeEmailFd.getText();
@@ -739,13 +742,26 @@ public void addEmployee() {
         return;
     }
 
+    if (!isValidEmail(email)) {
+        showAlert("Error", "Invalid email format. Please enter a valid email address.");
+        return;
+    }
+
+    if (isEmailAlreadyUsed(email)) {
+        showAlert("Error", "Email already exists. Please use a different email address.");
+        return;
+    }
+
+    String defaultStatus = "able"; // Default status is set to "able"
+
     try (Connection conn = ConnectDB.connectDB();
-         PreparedStatement stmt = conn.prepareStatement("INSERT INTO employees (employee_name, email, password, phone, gender) VALUES (?, ?, ?, ?, ?)")) {
+         PreparedStatement stmt = conn.prepareStatement("INSERT INTO employees (employee_name, email, password, phone, gender, status) VALUES (?, ?, ?, ?, ?, ?)")) {
         stmt.setString(1, name);
         stmt.setString(2, email);
         stmt.setString(3, password);
         stmt.setString(4, phone);
         stmt.setString(5, gender);
+        stmt.setString(6, defaultStatus); // Setting default status
 
         int rowsInserted = stmt.executeUpdate();
         if (rowsInserted > 0) {
@@ -757,6 +773,27 @@ public void addEmployee() {
         showAlert("Error", "Failed to add employee: " + e.getMessage());
     }
 }
+
+// Email validation method
+private boolean isValidEmail(String email) {
+    String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+    return email.matches(emailRegex);
+}
+
+// Method to check if email already exists in the database
+private boolean isEmailAlreadyUsed(String email) {
+    try (Connection conn = ConnectDB.connectDB();
+         PreparedStatement stmt = conn.prepareStatement("SELECT email FROM employees WHERE email = ?")) {
+        stmt.setString(1, email);
+        ResultSet result = stmt.executeQuery();
+        return result.next(); // Return true if email is found
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+
+
 
 @FXML
 public void updateEmployee() {
@@ -797,30 +834,47 @@ public void updateEmployee() {
 
 
 @FXML
-public void deleteEmployee() {
+public void toggleEmployeeStatus() {
     Employee selectedEmployee = employeeTableView.getSelectionModel().getSelectedItem();
     if (selectedEmployee == null) {
         showAlert("Error", "No employee selected.");
         return;
     }
 
-    Optional<ButtonType> result = showConfirmationDialog("Delete Confirmation", "Are you sure you want to delete " + selectedEmployee.getName() + "?");
+    String currentStatus = selectedEmployee.getStatus();
+    String newStatus;
+    String confirmationMessage;
+
+    if ("able".equalsIgnoreCase(currentStatus)) {
+        newStatus = "disable";
+        confirmationMessage = "Are you sure you want to disable " + selectedEmployee.getName() + "?";
+    } else if ("disable".equalsIgnoreCase(currentStatus)) {
+        newStatus = "able";
+        confirmationMessage = "Are you sure you want to enable " + selectedEmployee.getName() + "?";
+    } else {
+        showAlert("Error", "Invalid status: " + currentStatus);
+        return;
+    }
+
+    Optional<ButtonType> result = showConfirmationDialog("Status Change Confirmation", confirmationMessage);
     if (result.isPresent() && result.get() == ButtonType.OK) {
         try (Connection conn = ConnectDB.connectDB();
-             PreparedStatement stmt = conn.prepareStatement("DELETE FROM employees WHERE employee_id = ?")) {
-            stmt.setInt(1, selectedEmployee.getId());
+             PreparedStatement stmt = conn.prepareStatement("UPDATE employees SET status = ? WHERE employee_id = ?")) {
+            stmt.setString(1, newStatus);
+            stmt.setInt(2, selectedEmployee.getId());
 
-            int rowsDeleted = stmt.executeUpdate();
-            if (rowsDeleted > 0) {
-                showAlert("Success", "Employee deleted successfully.");
+            int rowsUpdated = stmt.executeUpdate();
+            if (rowsUpdated > 0) {
+                showAlert("Success", "Employee status updated to " + newStatus + " successfully.");
                 loadEmployees();
                 clearEmployeeForm();
             }
         } catch (SQLException e) {
-            showAlert("Error", "Failed to delete employee: " + e.getMessage());
+            showAlert("Error", "Failed to update employee status: " + e.getMessage());
         }
     }
 }
+
 
 private boolean areEmployeeInputsValid(String name, String email, String password, String phone, String gender) {
     if ( email.isEmpty() || password.isEmpty() || phone.isEmpty() || gender == null || gender.isEmpty()) {
@@ -847,11 +901,7 @@ private boolean areEmployeeInputsValid(String name, String email, String passwor
     return true;
 }
 
-// Phương thức kiểm tra tính hợp lệ của email
-private boolean isValidEmail(String email) {
-    String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-    return email.matches(emailRegex);
-}
+
 
 // Phương thức kiểm tra tính hợp lệ của số điện thoại
 private boolean isValidPhone(String phone) {
@@ -869,6 +919,7 @@ public void clearEmployeeForm() {
     employeePasswordFd.clear();
     employeePhoneFd.clear();
     employeeGenderDd.setValue(null);
+    
 }
 
 @FXML
@@ -893,6 +944,7 @@ public void initializeBrand() {
         col_EmployeePassword.setCellValueFactory(new PropertyValueFactory<>("password"));
         col_EmployeePhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
         col_EmployeeGender.setCellValueFactory(new PropertyValueFactory<>("gender"));
+        col_EmployeeStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         // Load data into the table
         loadEmployees();
@@ -915,7 +967,8 @@ public void initializeBrand() {
                     rs.getString("email"),
                     rs.getString("password"),
                     rs.getString("phone"),
-                    rs.getString("gender")
+                    rs.getString("gender"),
+                    rs.getString("status")
                 );
                 employeeList.add(employee);
             }
@@ -1111,11 +1164,10 @@ public void loadBrands() {
     brandList.clear(); // Clear current list to reload fresh data
 
     String query = "SELECT b.brand_id, b.brand_name, b.created_at, b.updated_at, " +
-               "COUNT(p.product_id) AS product_count " +
-               "FROM brands b " +
-               "LEFT JOIN products p ON b.brand_id = p.brand_id " +
-               "GROUP BY b.brand_id, b.brand_name, b.created_at, b.updated_at";
-
+                   "SUM(p.quantity) AS product_count " +
+                   "FROM brands b " +
+                   "LEFT JOIN products p ON b.brand_id = p.brand_id " +
+                   "GROUP BY b.brand_id, b.brand_name, b.created_at, b.updated_at";
 
     try (Connection conn = ConnectDB.connectDB();
          PreparedStatement stmt = conn.prepareStatement(query);

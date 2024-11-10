@@ -126,68 +126,79 @@ public class PrimaryController {
     }
 
     @FXML
-    public void loginEmployee() throws IOException {
-        if (sf_username.getText().isEmpty() || staff_password.getText().isEmpty()) {
-            alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error Message");
-            alert.setHeaderText(null);
-            alert.setContentText("Please enter both Username and Password.");
-            alert.showAndWait();
-        } else {
-            String selectData = "SELECT employee_name, password FROM employees WHERE employee_name = ? AND password = ?";
+public void loginEmployee() throws IOException {
+    if (sf_username.getText().isEmpty() || staff_password.getText().isEmpty()) {
+        alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error Message");
+        alert.setHeaderText(null);
+        alert.setContentText("Please enter both Username and Password.");
+        alert.showAndWait();
+    } else {
+        String selectData = "SELECT employee_name,email, password, status FROM employees WHERE email = ? AND password = ?";
+        try {
+            prepare = connect.prepareStatement(selectData);
+            prepare.setString(1, sf_username.getText());
+            prepare.setString(2, staff_password.getText());
 
-            try {
-                prepare = connect.prepareStatement(selectData);
-                prepare.setString(1, sf_username.getText());
-                prepare.setString(2, staff_password.getText());
+            result = prepare.executeQuery();
 
-                result = prepare.executeQuery();
+            if (result.next()) {
+                String status = result.getString("status");
 
-                if (result.next()) {
-                    // Display login success message
-                    alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Information Message");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Successfully Logged In as Employee!");
-                    alert.showAndWait();
-
-                    // Load MainFormEmployee.fxml for Employee interface
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("MainFormEmployee.fxml"));
-                    Parent root = loader.load();
-
-                    // Obtain controller for employee main form to set data if needed
-                    MainFormEmployeeController mainFormEmployeeController = loader.getController();
-                    mainFormEmployeeController.setEmployeeName(result.getString("employee_name"));
-
-                    // Setup new stage and scene for employee main form
-                    Stage stage = new Stage();
-                    Scene scene = new Scene(root);
-                    stage.setTitle("Shoe Store Management System - Employee");
-                    stage.setMinWidth(900);
-                    stage.setMinHeight(500);
-                    stage.setScene(scene);
-                    stage.show();
-
-                    // Hide login window
-                    sf_login.getScene().getWindow().hide();
-
-                } else {
+                if ("disable".equalsIgnoreCase(status)) {
                     alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error Message");
                     alert.setHeaderText(null);
-                    alert.setContentText("Invalid Employee Username or Password. Please try again.");
+                    alert.setContentText("This employee account is disabled. Please contact the administrator.");
                     alert.showAndWait();
+                    return;
                 }
-            } catch (SQLException e) {
-                alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Database Error");
+
+                // Display login success message
+                alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Information Message");
                 alert.setHeaderText(null);
-                alert.setContentText("There was a problem with the login process. Please try again later.");
+                alert.setContentText("Successfully Logged In as Employee!");
                 alert.showAndWait();
-                e.printStackTrace();
+
+                // Load MainFormEmployee.fxml for Employee interface
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("MainFormEmployee.fxml"));
+                Parent root = loader.load();
+
+                // Obtain controller for employee main form to set data if needed
+                MainFormEmployeeController mainFormEmployeeController = loader.getController();
+                mainFormEmployeeController.setEmployeeName(result.getString("employee_name"));
+
+                // Setup new stage and scene for employee main form
+                Stage stage = new Stage();
+                Scene scene = new Scene(root);
+                stage.setTitle("Shoe Store Management System - Employee");
+                stage.setMinWidth(900);
+                stage.setMinHeight(500);
+                stage.setScene(scene);
+                stage.show();
+
+                // Hide login window
+                sf_login.getScene().getWindow().hide();
+
+            } else {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid Employee Username or Password. Please try again.");
+                alert.showAndWait();
             }
+        } catch (SQLException e) {
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Database Error");
+            alert.setHeaderText(null);
+            alert.setContentText("There was a problem with the login process. Please try again later.");
+            alert.showAndWait();
+            e.printStackTrace();
         }
     }
+}
+
 
     @FXML
     public void switchToSecondary(ActionEvent event) throws IOException {

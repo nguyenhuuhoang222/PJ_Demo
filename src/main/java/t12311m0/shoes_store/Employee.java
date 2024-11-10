@@ -11,16 +11,29 @@ public class Employee {
     private String email;
     private String password;
     private String phone;
-    private String gender; // Gender should be either "male" or "female"
+    private String gender;
+    private String status;
 
-    public Employee(int id, String name, String email, String password, String phone, String gender) {
+    public Employee(int id, String name, String email, String password, String phone, String gender,String status) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.phone = phone;
-        setGender(gender); // Use the setter to enforce validation
+        setGender(gender);
+        setStatus(status);
+        // Use the setter to enforce validation
     }
+
+    public String getStatus() {
+        return status;
+    }
+
+    /**
+     *
+     * @param status
+     */
+ 
 
     // Getter and setter with validation for gender
     public String getGender() {
@@ -34,6 +47,15 @@ public class Employee {
             throw new IllegalArgumentException("Gender must be 'male' or 'female'");
         }
     }
+    
+      public void setStatus(String status) {
+    if (status.equalsIgnoreCase("able") || status.equalsIgnoreCase("disable")) {
+        this.status = status;
+    } else {
+        throw new IllegalArgumentException("Status must be 'ABLE' or 'DISABLE'");
+    }
+}
+
 
     // Other getters and setters
     public int getId() {
