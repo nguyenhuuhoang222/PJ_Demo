@@ -125,78 +125,66 @@ public class PrimaryController {
         }
     }
 
-    @FXML
-public void loginEmployee() throws IOException {
-    if (sf_username.getText().isEmpty() || staff_password.getText().isEmpty()) {
-        alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error Message");
-        alert.setHeaderText(null);
-        alert.setContentText("Please enter both Username and Password.");
-        alert.showAndWait();
-    } else {
-        String selectData = "SELECT employee_name,email, password, status FROM employees WHERE email = ? AND password = ?";
-        try {
-            prepare = connect.prepareStatement(selectData);
-            prepare.setString(1, sf_username.getText());
-            prepare.setString(2, staff_password.getText());
+@FXML
+private int employeeId; // Class variable to store employee ID
 
-            result = prepare.executeQuery();
+@FXML
+    public void loginEmployee() throws IOException {
+        if (sf_username.getText().isEmpty() || staff_password.getText().isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Error Message", "Please enter both Username and Password.");
+        } else {
+            String selectData = "SELECT employee_id, employee_name, email, password, status FROM employees WHERE email = ? AND password = ?";
+            try (Connection connect = ConnectDB.connectDB();
+                 PreparedStatement prepare = connect.prepareStatement(selectData)) {
+                prepare.setString(1, sf_username.getText());
+                prepare.setString(2, staff_password.getText());
 
-            if (result.next()) {
-                String status = result.getString("status");
+                ResultSet result = prepare.executeQuery();
 
-                if ("disable".equalsIgnoreCase(status)) {
-                    alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error Message");
-                    alert.setHeaderText(null);
-                    alert.setContentText("This employee account is disabled. Please contact the administrator.");
-                    alert.showAndWait();
-                    return;
+                if (result.next()) {
+                    String status = result.getString("status");
+
+                    if ("disable".equalsIgnoreCase(status)) {
+                        showAlert(Alert.AlertType.ERROR, "Error Message", "This employee account is disabled. Please contact the administrator.");
+                        return;
+                    }
+
+                    int employeeId = result.getInt("employee_id");
+                    String employeeName = result.getString("employee_name");
+
+                    showAlert(Alert.AlertType.INFORMATION, "Information Message", "Successfully Logged In as Employee!");
+
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("MainFormEmployee.fxml"));
+                    Parent root = loader.load();
+
+                    SalesPageController mainFormEmployeeController = loader.getController();
+                    mainFormEmployeeController.initData(employeeName, employeeId);
+
+                    Stage stage = new Stage();
+                    Scene scene = new Scene(root);
+                    stage.setTitle("Shoe Store Management System - Employee");
+                    stage.setMinWidth(900);
+                    stage.setMinHeight(500);
+                    stage.setScene(scene);
+                    stage.show();
+
+sf_login.getScene().getWindow().hide();
+                } else {
+                    showAlert(Alert.AlertType.ERROR, "Error Message", "Invalid Employee Username or Password. Please try again.");
                 }
-
-                // Display login success message
-                alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Information Message");
-                alert.setHeaderText(null);
-                alert.setContentText("Successfully Logged In as Employee!");
-                alert.showAndWait();
-
-                // Load MainFormEmployee.fxml for Employee interface
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("MainFormEmployee.fxml"));
-                Parent root = loader.load();
-
-                // Obtain controller for employee main form to set data if needed
-                MainFormEmployeeController mainFormEmployeeController = loader.getController();
-                mainFormEmployeeController.setEmployeeName(result.getString("employee_name"));
-
-                // Setup new stage and scene for employee main form
-                Stage stage = new Stage();
-                Scene scene = new Scene(root);
-                stage.setTitle("Shoe Store Management System - Employee");
-                stage.setMinWidth(900);
-                stage.setMinHeight(500);
-                stage.setScene(scene);
-                stage.show();
-
-                // Hide login window
-                sf_login.getScene().getWindow().hide();
-
-            } else {
-                alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error Message");
-                alert.setHeaderText(null);
-                alert.setContentText("Invalid Employee Username or Password. Please try again.");
-                alert.showAndWait();
+            } catch (SQLException e) {
+                showAlert(Alert.AlertType.ERROR, "Database Error", "There was a problem with the login process. Please try again later.");
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Database Error");
-            alert.setHeaderText(null);
-            alert.setContentText("There was a problem with the login process. Please try again later.");
-            alert.showAndWait();
-            e.printStackTrace();
         }
     }
+// Helper method to show alerts
+private void showAlert(Alert.AlertType alertType, String title, String message) {
+    Alert alert = new Alert(alertType);
+    alert.setTitle(title);
+    alert.setHeaderText(null);
+    alert.setContentText(message);
+    alert.showAndWait();
 }
 
 
@@ -223,4 +211,5 @@ public void loginEmployee() throws IOException {
             slider.play();
         }
     }
+    
 }
