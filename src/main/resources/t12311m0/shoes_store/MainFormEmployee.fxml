@@ -36,7 +36,7 @@
                                                 <Image url="@image/Black_Logo-removebg-preview.png" />
                                              </image>
                                           </ImageView>
-                                          <Label fx:id="empName" layoutX="14.0" layoutY="148.0" />
+                                          <Label fx:id="empName" layoutX="14.0" layoutY="148.0" textFill="WHITE" />
                                        </children>
                                     </AnchorPane>
                                     <Button fx:id="r_r_btn" layoutX="17.0" layoutY="375.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="190.0" styleClass="nav-btn" stylesheets="@MainForm.css" text="Revenue Reports" />

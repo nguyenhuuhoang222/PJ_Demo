@@ -2,7 +2,6 @@
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
@@ -13,39 +12,38 @@
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="t12311m0.shoes_store.PrimaryController">
     <children>
-        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+        <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="gradient" stylesheets="@Login.css">
             <children>
-                <AnchorPane layoutX="300.0" prefHeight="400.0" prefWidth="300.0" stylesheets="@Login.css">
+                <AnchorPane layoutX="300.0" prefHeight="400.0" prefWidth="300.0" styleClass="gradient" stylesheets="@Login.css">
                     <children>
-                        <Label layoutX="65.0" layoutY="68.0" text="Login Admin Account " />
+                        <Label layoutX="65.0" layoutY="68.0" styleClass="text" stylesheets="@Login.css" textFill="WHITE" />
                         <TextField fx:id="ad_username" layoutX="40.0" layoutY="124.0" prefHeight="30.0" prefWidth="220.0" promptText="UserName" />
                         <PasswordField fx:id="ad_password" layoutX="40.0" layoutY="170.0" prefHeight="30.0" prefWidth="220.0" promptText="Password" />
-                        <Button fx:id="ad_login" layoutX="40.0" layoutY="228.0" mnemonicParsing="false" onAction="#loginAdmin" prefHeight="43.0" prefWidth="220.0" text="Login for Admin" />
-                        <FontAwesomeIcon glyphName="USER" layoutX="140.0" layoutY="64.0" size="2em" />
-                        <Hyperlink fx:id="ad_forgot" layoutX="40.0" layoutY="204.0" text="ForgotPassword ?" />
+                        <Button fx:id="ad_login" layoutX="40.0" layoutY="228.0" mnemonicParsing="false" onAction="#loginAdmin" prefHeight="43.0" prefWidth="220.0" styleClass="nav-btn" stylesheets="@Login.css" text="Login for Admin" />
+                        <FontAwesomeIcon fill="WHITE" glyphName="USER" layoutX="140.0" layoutY="64.0" size="2em" />
+                  <Label layoutX="65.0" layoutY="68.0" text="Login Admin Account " textFill="WHITE" />
                     </children>
                 </AnchorPane>
-                <AnchorPane layoutY="5.0" prefHeight="400.0" prefWidth="300.0" stylesheets="@Login.css">
+                <AnchorPane layoutY="3.0" prefHeight="400.0" prefWidth="300.0" stylesheets="@Login.css">
                     <children>
                         <Label layoutX="65.0" layoutY="68.0" text="Login Staff Account " />
-                        <TextField fx:id="sf_username" layoutX="40.0" layoutY="124.0" prefHeight="30.0" prefWidth="220.0" promptText="UserName" />
+                        <TextField fx:id="sf_username" layoutX="40.0" layoutY="124.0" prefHeight="30.0" prefWidth="220.0" promptText="Employee's Email" />
                         <PasswordField fx:id="staff_password" layoutX="40.0" layoutY="170.0" prefHeight="30.0" prefWidth="220.0" promptText="Password" />
-                        <Button fx:id="sf_login" layoutX="40.0" layoutY="228.0" mnemonicParsing="false" onAction="#loginEmployee" prefHeight="43.0" prefWidth="220.0" text="Login for Staff" />
-                        <FontAwesomeIcon glyphName="USERS" layoutX="130.0" layoutY="64.0" size="2em" text="" />
-                        <Hyperlink fx:id="sf_forgot" layoutX="40.0" layoutY="204.0" text="ForgotPassword ?" />
+                        <Button fx:id="sf_login" layoutX="40.0" layoutY="228.0" mnemonicParsing="false" onAction="#loginEmployee" prefHeight="43.0" prefWidth="220.0" styleClass="nav-btn" text="Login for Staff" />
+                        <FontAwesomeIcon fill="WHITE" glyphName="USERS" layoutX="130.0" layoutY="64.0" size="2em" text="" />
                     </children>
                 </AnchorPane>
                 <AnchorPane fx:id="side_form" prefHeight="400.0" prefWidth="305.0" styleClass="gradient" stylesheets="@Login.css">
                     <children>
-                        <Button fx:id="moveToStaff" layoutX="42.0" layoutY="335.0" mnemonicParsing="false" onAction="#switchToSecondary" prefHeight="43.0" prefWidth="220.0" text="Login for staff" />
-                        <FontAwesomeIcon glyphName="USERS" layoutX="135.0" layoutY="300.0" size="2em" text="" />
-                        <Label layoutX="73.0" layoutY="304.0" text="Login Staff Account" />
-                        <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="75.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
+                        <Button fx:id="moveToStaff" layoutX="42.0" layoutY="335.0" mnemonicParsing="false" onAction="#switchToSecondary" prefHeight="43.0" prefWidth="220.0" styleClass="nav-btn" stylesheets="@Login.css" text="Login for staff" />
+                        <FontAwesomeIcon fill="WHITE" glyphName="USERS" layoutX="135.0" layoutY="300.0" size="2em" text="" />
+                        <Label layoutX="73.0" layoutY="304.0" text="Login Staff Account" textFill="WHITE" />
+                        <ImageView fitHeight="174.0" fitWidth="206.0" layoutX="62.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@image/Logo.png" />
+                                <Image url="@image/Black_Logo-removebg-preview.png" />
                             </image>
                         </ImageView>
-                        <Label layoutX="36.0" layoutY="214.0" text="Shoe Store Management System" />
+                        <Label layoutX="36.0" layoutY="214.0" text="Shoe Store Management System" textFill="WHITE" />
                         <Button fx:id="moveToAdmin" layoutX="43.0" layoutY="335.0" mnemonicParsing="false" onAction="#switchToSecondary" prefHeight="43.0" prefWidth="220.0" text="Login for admin" visible="false" />
                     </children>
                 </AnchorPane>

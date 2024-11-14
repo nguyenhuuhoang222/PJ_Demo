@@ -23,6 +23,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.File;
+import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
 
@@ -164,6 +165,7 @@ public class MainFormController implements Initializable {
     };
     //chuyen trang 
 
+
     @FXML
     public void showMainPage() {
         setAllPagesVisibility(false);
@@ -184,6 +186,7 @@ public class MainFormController implements Initializable {
         setAllPagesVisibility(false);
         employeeManagementPage.setVisible(true); // Hiển thị trang quản lý nhân viên
         loadEmployees(); // Làm mới danh sách nhân viên
+
     }
 
     @FXML
@@ -191,14 +194,15 @@ public class MainFormController implements Initializable {
         setAllPagesVisibility(false);
         customerManagementPage.setVisible(true); // Hiển thị trang quản lý khách hàng
         loadCustomers(); // Làm mới danh sách khách hàng
-    }
+}
 
     @FXML
     public void showBrandManagementPage() {
         setAllPagesVisibility(false);
-        brandManagementPage.setVisible(true); // Hiển thị trang quản lý thương hiệu
-        refreshBrandComboBox(); // Làm mới danh sách thương hiệu
-    }
+        brandManagementPage.setVisible(true);
+        loadBrands();   // Hiển thị trang quản lý thương hiệu
+           
+}
 
 // Phương thức giúp ẩn tất cả các trang
     private void setAllPagesVisibility(boolean visible) {
@@ -331,11 +335,14 @@ public class MainFormController implements Initializable {
                 } else {
                     try {
                         // Load the image from the URL with specific dimensions for performance
-                        Image image = new Image(imageUrl, 50, 50, true, true);
-                        imageView.setImage(image);
-                        imageView.setFitHeight(50); // Set the height of the image
-                        imageView.setFitWidth(50); // Set the width of the image
-                        setGraphic(imageView); // Display the ImageView in the cell
+                        Image image = new Image(imageUrl, 50, 100,false, true); // Create image with the given URL
+                        ImageView imageView = new ImageView(image); // Create ImageView for the image
+
+                        // Set the image size in the ImageView
+//                        imageView.setFitHeight(50);
+//                        imageView.setFitWidth(50);
+
+                        setGraphic(imageView); // Display the ImageView in the celll
                     } catch (Exception e) {
                         System.out.println("Error loading image: " + imageUrl);
                         setGraphic(null); // Do not display anything if image loading fails
@@ -438,56 +445,62 @@ public class MainFormController implements Initializable {
         }
     }
 
-    private boolean areInputsValidP(String name, Brand brand, String price, String quantity, String size, String imageUrl) {
-        // Kiểm tra độ dài của name
-        if (name.length() < 5 || name.length() > 25) {
-            showAlert("Error", "Name must be between 5 and 25 characters.");
-            return false;
-        }
-
-        // Kiểm tra brand không null
-        if (brand == null) {
-            showAlert("Error", "Brand cannot be null.");
-            return false;
-        }
-
-        // Kiểm tra price lớn hơn 1.00
-        try {
-            double parsedPrice = Double.parseDouble(price);
-            if (parsedPrice <= 1.00) {
-                showAlert("Error", "Price must be greater than 1.00.");
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            showAlert("Error", "Price must be a valid number.");
-            return false;
-        }
-
-        // Kiểm tra quantity lớn hơn 0
-        try {
-            int parsedQuantity = Integer.parseInt(quantity);
-            if (parsedQuantity <= 0) {
-                showAlert("Error", "Quantity must be greater than 0.");
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            showAlert("Error", "Quantity must be a valid integer.");
-            return false;
-        }
-
-        // Kiểm tra size và imageUrl không null
-        if (size == null || size.isEmpty()) {
-            showAlert("Error", "Size cannot be null or empty.");
-            return false;
-        }
-
-        if (imageUrl == null || imageUrl.isEmpty()) {
-            showAlert("Error", "Image URL cannot be null or empty.");
-            return false;
-        }
-
-        return true;
+private boolean areInputsValidP(String name, Brand brand, String price, String quantity, String size, String imageUrl) {
+    // Kiểm tra độ dài của name
+    if (name.length() < 5 || name.length() > 25) {
+        showAlert("Error", "Name must be between 5 and 25 characters.");
+        return false;
     }
+
+    // Kiểm tra tên sản phẩm không trùng lặp
+    if (isDuplicateProductName(name)) {
+        showAlert("Error", "Product name already exists. Please use a different name.");
+        return false;
+    }
+
+    // Kiểm tra brand không null
+    if (brand == null) {
+        showAlert("Error", "Brand cannot be null.");
+        return false;
+    }
+
+    // Kiểm tra price lớn hơn 1.00
+    try {
+        double parsedPrice = Double.parseDouble(price);
+        if (parsedPrice <= 1.00) {
+            showAlert("Error", "Price must be greater than 1.00.");
+            return false;
+        }
+    } catch (NumberFormatException e) {
+        showAlert("Error", "Price must be a valid number.");
+        return false;
+    }
+
+    // Kiểm tra quantity lớn hơn 0
+    try {
+        int parsedQuantity = Integer.parseInt(quantity);
+        if (parsedQuantity <= 0) {
+            showAlert("Error", "Quantity must be greater than 0.");
+            return false;
+        }
+    } catch (NumberFormatException e) {
+        showAlert("Error", "Quantity must be a valid integer.");
+        return false;
+    }
+
+    // Kiểm tra size và imageUrl không null
+    if (size == null || size.isEmpty()) {
+        showAlert("Error", "Size cannot be null or empty.");
+        return false;
+    }
+
+    if (imageUrl == null || imageUrl.isEmpty()) {
+        showAlert("Error", "Image URL cannot be null or empty.");
+        return false;
+    }
+
+    return true;
+}
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -673,34 +686,49 @@ public class MainFormController implements Initializable {
                 imageUrl
         );
 
-        if (updateProductInDatabase(updatedProduct, selectedProduct.getName())) {
+        if (updateProductInDatabase(updatedProduct, selectedProduct.getId())) {
             showAlert("Success", "Product updated successfully.");
             loadProducts(); // Refresh TableView
         } else {
             showAlert("Error", "Failed to update product. Please try again.");
         }
     }
-
-    private boolean updateProductInDatabase(Product updatedProduct, String oldProductName) {
-        String updateQuery = "UPDATE products SET product_name = ?, brand_id = ?, price = ?, quantity = ?, description = ?, product_size = ?, image_url = ? WHERE product_name = ?";
-
-        try (Connection conn = ConnectDB.connectDB(); PreparedStatement stmt = conn.prepareStatement(updateQuery)) {
-
-            stmt.setString(1, updatedProduct.getName());
-            stmt.setInt(2, updatedProduct.getBrandId()); // Use brand ID
-            stmt.setDouble(3, updatedProduct.getPrice());
-            stmt.setInt(4, updatedProduct.getQuantity());
-            stmt.setString(5, updatedProduct.getDescription());
-            stmt.setString(6, updatedProduct.getSize());
-            stmt.setString(7, updatedProduct.getImageUrl());
-            stmt.setString(8, oldProductName);
-
-            return stmt.executeUpdate() > 0; // Return true if update is successful
-        } catch (SQLException e) {
-            showAlert("Error", "Failed to update product: " + e.getMessage());
-            return false; // Return false if an error occurs
-        }
+    
+    private boolean isDuplicateProductName(String productName) {
+    try (Connection conn = ConnectDB.connectDB();
+         PreparedStatement stmt = conn.prepareStatement("SELECT COUNT(*) FROM products WHERE product_name = ?")) {
+        
+        stmt.setString(1, productName);
+        ResultSet rs = stmt.executeQuery();
+        return rs.next() && rs.getInt(1) > 0;
+    } catch (SQLException e) {
+        showAlert("Error", "Failed to check duplicate product name: " + e.getMessage());
+        return false;
     }
+}
+
+
+ private boolean updateProductInDatabase(Product updatedProduct, int id) {
+    String updateQuery = "UPDATE products SET product_name = ?, brand_id = ?, price = ?, quantity = ?, description = ?, product_size = ?, image_url = ? WHERE product_id = ?";
+
+    try (Connection conn = ConnectDB.connectDB(); PreparedStatement stmt = conn.prepareStatement(updateQuery)) {
+
+        stmt.setString(1, updatedProduct.getName());
+        stmt.setInt(2, updatedProduct.getBrandId()); // Use brand ID
+        stmt.setDouble(3, updatedProduct.getPrice());
+        stmt.setInt(4, updatedProduct.getQuantity());
+        stmt.setString(5, updatedProduct.getDescription());
+        stmt.setString(6, updatedProduct.getSize());
+        stmt.setString(7, updatedProduct.getImageUrl());
+        stmt.setInt(8, updatedProduct.getId()); // Use product ID as the identifier
+
+        return stmt.executeUpdate() > 0; // Return true if update is successful
+    } catch (SQLException e) {
+        showAlert("Error", "Failed to update product: " + e.getMessage());
+        return false; // Return false if an error occurs
+    }
+}
+
 
     @FXML
     public void addEmployee() {
@@ -1076,37 +1104,51 @@ public class MainFormController implements Initializable {
     }
     // Thêm thương hiệu mới
 
-    @FXML
-    public void addBrand() {
-        String name = brandNameFd.getText(); // Get brand name from input field
-        Timestamp currentTime = new Timestamp(System.currentTimeMillis()); // Current timestamp
 
-        if (name == null || name.trim().isEmpty()) {
-            showAlert("Error", "Brand name is required.");
+public void addBrand() {
+    String name = brandNameFd.getText(); // Get brand name from input field
+    Timestamp currentTime = new Timestamp(System.currentTimeMillis()); // Current timestamp
+
+    if (name == null || name.trim().isEmpty()) {
+        showAlert("Error", "Brand name is required.");
+        return;
+    }
+
+    try (Connection conn = ConnectDB.connectDB()) {
+        // Check if the brand name already exists
+        PreparedStatement checkStmt = conn.prepareStatement(
+                "SELECT COUNT(*) FROM brands WHERE brand_name = ?");
+        checkStmt.setString(1, name);
+        ResultSet rs = checkStmt.executeQuery();
+        
+        if (rs.next() && rs.getInt(1) > 0) {
+            showAlert("Error", "Brand name already exists. Please use a different name.");
             return;
         }
 
-        try (Connection conn = ConnectDB.connectDB(); PreparedStatement stmt = conn.prepareStatement(
-                "INSERT INTO brands (brand_name, created_at, updated_at) VALUES (?, ?, ?)")) {
+        // Insert the new brand if it does not exist
+        PreparedStatement insertStmt = conn.prepareStatement(
+                "INSERT INTO brands (brand_name, created_at, updated_at) VALUES (?, ?, ?)");
+        insertStmt.setString(1, name);
+        insertStmt.setTimestamp(2, currentTime);
+        insertStmt.setTimestamp(3, currentTime);
 
-            stmt.setString(1, name);
-            stmt.setTimestamp(2, currentTime);
-            stmt.setTimestamp(3, currentTime);
-
-            int rowsInserted = stmt.executeUpdate();
-            if (rowsInserted > 0) {
-                showAlert("Success", "Brand added successfully.");
-                clearBrandForm();
-                loadBrands();
-            }
-        } catch (SQLException e) {
-            showAlert("Error", "Failed to add brand: " + e.getMessage());
+        int rowsInserted = insertStmt.executeUpdate();
+        if (rowsInserted > 0) {
+            showAlert("Success", "Brand added successfully.");
+            clearBrandForm();
+            loadBrands();
         }
+    } catch (SQLException e) {
+        showAlert("Error", "Failed to add brand: " + e.getMessage());
     }
+}
+
 
     public void clearBrandForm() {
         brandNameFd.clear(); // Clear input field
     }
+// Fixx loi khong show product theo brand
 
     public void loadBrands() {
         brandList.clear(); // Clear current list to reload fresh data
@@ -1138,38 +1180,51 @@ public class MainFormController implements Initializable {
     }
 
     @FXML
-    public void updateBrand() {
-        Brand selectedBrand = brandTableView.getSelectionModel().getSelectedItem();
-        if (selectedBrand == null) {
-            showAlert("Error", "Please select a brand to update.");
-            return;
-        }
-
-        String newName = brandNameFd.getText();
-        Timestamp updatedAt = new Timestamp(System.currentTimeMillis());
-
-        if (newName == null || newName.trim().isEmpty()) {
-            showAlert("Error", "Brand name is required.");
-            return;
-        }
-
-        try (Connection conn = ConnectDB.connectDB(); PreparedStatement stmt = conn.prepareStatement(
-                "UPDATE brands SET brand_name = ?, updated_at = ? WHERE brand_id = ?")) {
-
-            stmt.setString(1, newName);
-            stmt.setTimestamp(2, updatedAt);
-            stmt.setInt(3, selectedBrand.getBrandId());
-
-            int rowsUpdated = stmt.executeUpdate();
-            if (rowsUpdated > 0) {
-                showAlert("Success", "Brand updated successfully.");
-                clearBrandForm();
-                loadBrands();
-            }
-        } catch (SQLException e) {
-            showAlert("Error", "Failed to update brand: " + e.getMessage());
-        }
+public void updateBrand() {
+    Brand selectedBrand = brandTableView.getSelectionModel().getSelectedItem();
+    if (selectedBrand == null) {
+        showAlert("Error", "Please select a brand to update.");
+        return;
     }
+
+    String newName = brandNameFd.getText();
+    Timestamp updatedAt = new Timestamp(System.currentTimeMillis());
+
+    if (newName == null || newName.trim().isEmpty()) {
+        showAlert("Error", "Brand name is required.");
+        return;
+    }
+
+    try (Connection conn = ConnectDB.connectDB()) {
+        // Check if the new brand name already exists for another brand
+        PreparedStatement checkStmt = conn.prepareStatement(
+                "SELECT COUNT(*) FROM brands WHERE brand_name = ? AND brand_id <> ?");
+        checkStmt.setString(1, newName);
+        checkStmt.setInt(2, selectedBrand.getBrandId());
+        ResultSet rs = checkStmt.executeQuery();
+
+        if (rs.next() && rs.getInt(1) > 0) {
+            showAlert("Error", "Brand name already exists. Please use a different name.");
+            return;
+        }
+
+        // Update the brand if no duplicate name is found
+        PreparedStatement updateStmt = conn.prepareStatement(
+                "UPDATE brands SET brand_name = ?, updated_at = ? WHERE brand_id = ?");
+        updateStmt.setString(1, newName);
+        updateStmt.setTimestamp(2, updatedAt);
+        updateStmt.setInt(3, selectedBrand.getBrandId());
+
+        int rowsUpdated = updateStmt.executeUpdate();
+        if (rowsUpdated > 0) {
+            showAlert("Success", "Brand updated successfully.");
+            clearBrandForm();
+            loadBrands();
+        }
+    } catch (SQLException e) {
+        showAlert("Error", "Failed to update brand: " + e.getMessage());
+    }
+}
 
     @FXML
     public void deleteBrand() {

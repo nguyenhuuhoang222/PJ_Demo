@@ -1,81 +1,70 @@
-/*
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
-*/
-/* 
-    Created on : Sep 30, 2024, 11:28:55 PM
-    Author     : admin
-*/
+/* Login Form Styles */
 
-.gradient{
--fx-background-color: #ECF0F1;
+/* Global Styles */
+.gradient {
+    -fx-background-color: linear-gradient(to bottom,#235347, #8eb69b); /* Gradient từ xám sang trắng */
 }
-    /* Styles for Buttons */
-.button {
-    -fx-background-color: #ff8c00; /* Bright orange for a modern look */
-    -fx-text-fill: white; /* White text for contrast */
-    -fx-font-size: 16px;
-    -fx-padding: 10px 20px; /* Add padding for better spacing */
-    -fx-border-radius: 5px;
-    -fx-background-radius: 5px;
-    -fx-font-family: "Arial", sans-serif;
+
+/* Button Styles for Login */
+.nav-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: white; /* Xám */
+    -fx-border-width: .4px;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0.5, 0.0, 2.0);
-    -fx-border-color: transparent;
+    -fx-text-fill: white; /* Xám */
+    -fx-font-size: 14px;
 }
 
-/* Hover effect for buttons */
-.button:hover {
-    -fx-background-color: #e07b00; /* Darker orange on hover */
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 12, 0.6, 0.0, 3.0);
+.nav-btn:hover {
+    -fx-background-color: #808080; /* Xám */
+    -fx-text-fill: #fff; /* Đổi thành trắng khi hover */
 }
 
-/* Styles for Labels */
+/* Label Styles */
 .label {
-    -fx-text-fill: #333333; /* Dark gray for a clean look */
+    -fx-text-fill: #333333;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
     -fx-font-family: "Verdana", sans-serif;
-    -fx-padding: 5px 0px; /* Adjust padding for label text */
+    -fx-padding: 5px 0px;
 }
 
-/* Header styling (if you want to style a specific header area) */
+/* Header Styling */
 .header {
-    -fx-background-color: #ffffff; /* Clean white background */
-    -fx-padding: 20px; /* Space around the header content */
-    -fx-border-color: #cccccc; /* Light gray border */
-    -fx-border-width: 0 0 2px 0; /* Bottom border for a sleek divider */
+    -fx-background-color: #ffffff;
+    -fx-padding: 20px;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 0 0 2px 0;
 }
 
 .header .label {
-    -fx-text-fill: #ff8c00; /* Match label color with button theme */
-    -fx-font-size: 24px; /* Larger font size for header text */
+    -fx-text-fill: #ff8c00;
+    -fx-font-size: 24px;
     -fx-font-weight: bold;
 }
-/* Styles for TextFields */
+
+/* TextField Styles */
 .text-field {
-    -fx-background-color: #FFFFFF; /* White background for default look */
-    -fx-text-fill: #333333; /* Dark gray text */
-    -fx-border-color: #cccccc; /* Light gray border for default state */
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #333333;
+    -fx-border-color: #cccccc;
     -fx-border-width: 2px;
-    -fx-padding: 8px 10px; /* Padding for better spacing inside */
+    -fx-padding: 8px 10px;
     -fx-font-family: "Arial", sans-serif;
     -fx-font-size: 14px;
 }
 
-/* When TextField is focused */
 .text-field:focused {
-    -fx-background-color: #f9f9f9; /* Slightly darker background when focused */
-    -fx-border-color: #ff8c00; /* Orange border to match button theme */
-    -fx-border-width: 2px; /* Slightly thicker border */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 8, 0.4, 0.0, 2.0); /* Soft shadow */
+    -fx-background-color: #f9f9f9;
+    -fx-border-color: #ff8c00;
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 8, 0.4, 0.0, 2.0);
 }
 
-/* Placeholder text styling (prompt text) */
 .text-field .text {
-    -fx-fill: #aaaaaa; /* Gray for placeholder text */
+    -fx-fill: #aaaaaa;
 }
 
 .text-field:focused .text {
-    -fx-fill: #333333; /* Darker text when focused */
+    -fx-fill: #333333;
 }

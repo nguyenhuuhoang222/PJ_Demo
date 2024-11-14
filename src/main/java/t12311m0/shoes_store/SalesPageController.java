@@ -1,6 +1,5 @@
 package t12311m0.shoes_store;
 
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -36,8 +35,9 @@ import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
 
 public class SalesPageController {
+
     public SalesPageController() {
-    
+
     }
 
     @FXML
@@ -51,8 +51,6 @@ public class SalesPageController {
 
     @FXML
     private Label change;
-
-
 
     @FXML
     private Label empName;
@@ -78,8 +76,6 @@ public class SalesPageController {
     @FXML
     private Button r_r_btn;
 
-
-
     @FXML
     private Label total;
     @FXML
@@ -94,7 +90,6 @@ public class SalesPageController {
     @FXML
     private TableColumn<OrderItem, Double> col_Price;
 
-
     private Connection connect;
     private ResultSet result;
     private PreparedStatement prepare;
@@ -105,18 +100,20 @@ public class SalesPageController {
     public SalesPageController(int getid) {
         this.getid = getid;
     }
-    
+
     public void initData(String employeeName, int employeeId) {
         setEmployeeName(employeeName);
         this.employeeId = employeeId;
     }
-       @FXML
+
+    @FXML
     public void logout() {
         if (confirmLogout()) {
             closeCurrentWindow();
             loadLoginForm();
         }
     }
+
     private void loadLoginForm() {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("primary.fxml"));
@@ -125,7 +122,7 @@ public class SalesPageController {
             stage.setScene(new Scene(root));
             stage.show();
         } catch (Exception e) {
-showAlert(Alert.AlertType.ERROR, "Error", "Failed to load login form: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load login form: " + e.getMessage());
         }
     }
 
@@ -133,7 +130,8 @@ showAlert(Alert.AlertType.ERROR, "Error", "Failed to load login form: " + e.getM
         Optional<ButtonType> result = showConfirmationDialog("Logout Confirmation", "Are you sure you want to logout?");
         return result.isPresent() && result.get() == ButtonType.OK;
     }
-        private Optional<ButtonType> showConfirmationDialog(String title, String message) {
+
+    private Optional<ButtonType> showConfirmationDialog(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(title);
         alert.setContentText(message);
@@ -144,24 +142,8 @@ showAlert(Alert.AlertType.ERROR, "Error", "Failed to load login form: " + e.getM
         Stage stage = (Stage) logoutButton.getScene().getWindow();
         stage.close();
     }
-    public static class OrderItem {
-        private final String productName;
-        private final int quantity;
-        private final double price;
 
-        public OrderItem(String productName, int quantity, double price) {
-            this.productName = productName;
-            this.quantity = quantity;
-            this.price = price;
-        }
-//xai cai mail k
-        // mail kia bi disabke doi e xiu 
-        public String getProductName() { return productName; }
-        public int getQuantity() { return quantity; }
-        public double getPrice() { return price; }
-    }
     private ObservableList<OrderItem> orderItems = FXCollections.observableArrayList();
-
 
     public void initialize() {
         try {
@@ -189,6 +171,7 @@ showAlert(Alert.AlertType.ERROR, "Error", "Failed to load login form: " + e.getM
             showAlert(Alert.AlertType.ERROR, "Initialization Error", "Failed to initialize the sales page.");
         }
     }
+
     private void setupTableView() {
         col_ProductName.setCellValueFactory(new PropertyValueFactory<>("productName"));
         col_Quantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
@@ -196,6 +179,7 @@ showAlert(Alert.AlertType.ERROR, "Error", "Failed to load login form: " + e.getM
 
         tableView.setItems(orderItems);
     }
+
     public void setEmployeeName(String employeeName) {
         empName.setText("Welcome, " + employeeName + "!");
     }
@@ -227,45 +211,49 @@ showAlert(Alert.AlertType.ERROR, "Error", "Failed to load login form: " + e.getM
         return listData;
     }
 
-    public void refreshOrderDisplay() {
-        try (Connection connect = ConnectDB.connectDB()) {
-            if (currentOrder != null) {
-                String query = "SELECT p.product_name, oi.quantity, oi.price " +
-                        "FROM order_items oi " +
-                        "JOIN products p ON oi.product_id = p.product_id " +
-                        "WHERE oi.order_id = ?";
+public void refreshOrderDisplay() {
+    try (Connection connect = ConnectDB.connectDB()) {
+        if (currentOrder != null) {
+            String query = "SELECT oi.order_item_id, oi.order_id, oi.product_id, p.product_name, oi.quantity, oi.price "
+                    + "FROM order_items oi "
+                    + "JOIN products p ON oi.product_id = p.product_id "
+                    + "WHERE oi.order_id = ?";
 
-                try (PreparedStatement stmt = connect.prepareStatement(query)) {
-                    stmt.setInt(1, currentOrder.getOrderId());
-                    ResultSet rs = stmt.executeQuery();
+            try (PreparedStatement stmt = connect.prepareStatement(query)) {
+                stmt.setInt(1, currentOrder.getOrderId());
+                ResultSet rs = stmt.executeQuery();
 
-                    orderItems.clear();
-                    double totalAmount = 0.0;
+                orderItems.clear();
+                double totalAmount = 0.0;
 
-                    while (rs.next()) {
-                        String productName = rs.getString("product_name");
-                        int quantity = rs.getInt("quantity");
-                        double price = rs.getDouble("price");
+                while (rs.next()) {
+                    int orderItemId = rs.getInt("order_item_id");
+                    int orderId = rs.getInt("order_id");
+                    int productId = rs.getInt("product_id"); // Sửa thành "product_id"
+                    String productName = rs.getString("product_name");
+                    int quantity = rs.getInt("quantity");
+                    double price = rs.getDouble("price");
 
-                        OrderItem item = new OrderItem(productName, quantity, price);
-                        orderItems.add(item);
-                        totalAmount += price;
-                    }
-
-                    final double finalTotal = totalAmount;
-                    javafx.application.Platform.runLater(() -> {
-                        total.setText(String.format("%.2f$", finalTotal));
-                        tableView.refresh(); // Force refresh the TableView
-                    });
-
-                    updateOrderTotal(currentOrder.getOrderId(), totalAmount);
+                    OrderItem item = new OrderItem(orderItemId, orderId, productId, productName, quantity, price);
+                    orderItems.add(item);
+                    totalAmount += price * quantity; // Tính tổng bằng cách nhân giá với số lượng
                 }
+
+                final double finalTotal = totalAmount;
+                javafx.application.Platform.runLater(() -> {
+                    total.setText(String.format("%.2f$", finalTotal));
+                    tableView.refresh(); // Làm mới TableView
+                });
+
+                updateOrderTotal(currentOrder.getOrderId(), totalAmount);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Error", "Failed to refresh order display: " + e.getMessage());
         }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        showAlert(Alert.AlertType.ERROR, "Error", "Failed to refresh order display: " + e.getMessage());
     }
+}
+
     private void updateOrderTotal(int orderId, double totalAmount) {
         try (Connection connect = ConnectDB.connectDB()) {
             String updateQuery = "UPDATE orders SET total_amount = ? WHERE order_id = ?";
@@ -478,77 +466,125 @@ showAlert(Alert.AlertType.ERROR, "Error", "Failed to load login form: " + e.getM
         }
     }
 
-    @FXML
-    private void handlePay(ActionEvent event) {
-        if (orderItems.isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Empty Order", "Please add items to the order before payment.");
-            return;
-        }
+@FXML
 
-        double totalCost = Double.parseDouble(total.getText().replace("$", ""));
+private void handlePay(ActionEvent event) {
+    if (orderItems.isEmpty()) {
+        showAlert(Alert.AlertType.WARNING, "Empty Order", "Please add items to the order before payment.");
+        return;
+    }
 
+    // Lấy tổng số tiền từ giao diện và loại bỏ ký hiệu `$`
+    double totalCost;
+    try {
+        totalCost = Double.parseDouble(total.getText().replace("$", ""));
         if (totalCost <= 0) {
             showAlert(Alert.AlertType.WARNING, "Invalid Order", "Order total must be greater than zero.");
             return;
         }
+    } catch (NumberFormatException e) {
+        showAlert(Alert.AlertType.ERROR, "Invalid Order Total", "The order total is not a valid number.");
+        return;
+    }
 
+    // Kiểm tra đầu vào của số tiền thanh toán
+    double amountPaid;
+    try {
         if (amount.getText().isEmpty()) {
-            showAlert(Alert.AlertType.ERROR, "Invalid Input", "Please enter the payment amount.");
+            throw new NumberFormatException("Empty payment field");
+        }
+        amountPaid = Double.parseDouble(amount.getText());
+        if (amountPaid <= 0) {
+            showAlert(Alert.AlertType.ERROR, "Invalid Amount", "Payment amount must be greater than zero.");
             return;
         }
+        if (amountPaid < totalCost) {
+            showAlert(Alert.AlertType.ERROR, "Insufficient Payment",
+                    "The payment amount ($" + String.format("%.2f", amountPaid) +
+                    ") is less than the total cost ($" + String.format("%.2f", totalCost) + ")");
+            return;
+        }
+    } catch (NumberFormatException e) {
+        showAlert(Alert.AlertType.ERROR, "Invalid Input", "Please enter a valid number for the payment amount.");
+        amount.clear();
+        amount.requestFocus();
+        return;
+    }
 
-        try {
-            double amountPaid = Double.parseDouble(amount.getText());
+    // Tính toán tiền thối lại và hiển thị
+    double changeAmount = amountPaid - totalCost;
+    change.setText(String.format("%.2f$", changeAmount));
 
-            if (amountPaid <= 0) {
-                showAlert(Alert.AlertType.ERROR, "Invalid Amount", "Payment amount must be greater than zero.");
-                return;
+    // Xác nhận đơn hàng hiện tại và cập nhật trạng thái
+    if (currentOrder != null) {
+        try (Connection conn = ConnectDB.connectDB()) {
+            String updateQuery = "UPDATE orders SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE order_id = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(updateQuery)) {
+                stmt.setString(1, "COMPLETED");
+                stmt.setInt(2, currentOrder.getOrderId());
+                stmt.executeUpdate();
             }
 
-            if (amountPaid < totalCost) {
-                showAlert(Alert.AlertType.ERROR, "Insufficient Payment",
-                        "The payment amount ($" + String.format("%.2f", amountPaid) +
-                                ") is less than the total cost ($" + String.format("%.2f", totalCost) + ")");
-                return;
-            }
+            // Cập nhật trạng thái đơn hàng trong đối tượng `currentOrder`
+            currentOrder.setStatus("COMPLETED");
 
-            double changeAmount = amountPaid - totalCost;
-            change.setText(String.format("%.2f$", changeAmount));
+            // Hiển thị thông báo thanh toán thành công
+            String successMessage = String.format(
+                    "Payment Successful!\n\nOrder Total: $%.2f\nAmount Paid: $%.2f\nChange: $%.2f\nOrder ID: %d",
+                    totalCost, amountPaid, changeAmount, currentOrder.getOrderId()
+            );
+            showAlert(Alert.AlertType.INFORMATION, "Payment Successful", successMessage);
 
-            if (currentOrder != null) {
-                try (Connection conn = ConnectDB.connectDB()) {
-                    String updateQuery = "UPDATE orders SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE order_id = ?";
-                    try (PreparedStatement stmt = conn.prepareStatement(updateQuery)) {
-                        stmt.setString(1, "COMPLETED");
-                        stmt.setInt(2, currentOrder.getOrderId());
-                        stmt.executeUpdate();
-                    }
+            // Xóa các thông tin liên quan đến đơn hàng sau khi thanh toán
+            clearOrder();
 
-                    currentOrder.setStatus("COMPLETED");
-
-                    String successMessage = String.format(
-                            "Payment Successful!\n\nOrder Total: $%.2f\nAmount Paid: $%.2f\nChange: $%.2f\nOrder ID: %d",
-                            totalCost, amountPaid, changeAmount, currentOrder.getOrderId()
-                    );
-
-                    showAlert(Alert.AlertType.INFORMATION, "Payment Successful", successMessage);
-
-                    clearOrder();
-
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    showAlert(Alert.AlertType.ERROR, "Database Error",
-                            "Failed to update order status: " + e.getMessage());
-                }
-            }
-
-        } catch (NumberFormatException e) {
-            showAlert(Alert.AlertType.ERROR, "Invalid Input",
-                    "Please enter a valid number for the payment amount.");
-            amount.clear();
-            amount.requestFocus();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Database Error", "Failed to update order status: " + e.getMessage());
         }
     }
+}
+
+// Phương thức cập nhật trạng thái đơn hàng trong cơ sở dữ liệu
+private void updateOrderStatus(int orderId, String status) {
+    String query = "UPDATE orders SET status = ? WHERE order_id = ?";
+    try (Connection connect = ConnectDB.connectDB();
+         PreparedStatement stmt = connect.prepareStatement(query)) {
+        stmt.setString(1, status);
+        stmt.setInt(2, orderId);
+        stmt.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+        showAlert(Alert.AlertType.ERROR, "Error", "Failed to update order status: " + e.getMessage());
+    }
+}
+
+
+
+private boolean processOrderItems() {
+    boolean success = true;
+    try (Connection connect = ConnectDB.connectDB()) {
+        for (OrderItem item : orderItems) {
+            String updateQuantitySQL = "UPDATE products SET quantity = quantity - ? WHERE product_id = ?";
+            try (PreparedStatement stmt = connect.prepareStatement(updateQuantitySQL)) {
+                stmt.setInt(1, item.getQuantity());
+                stmt.setInt(2, item.getProductId());
+                int affectedRows = stmt.executeUpdate();
+
+                if (affectedRows == 0) {
+                    success = false;
+                    break;
+                }
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        success = false;
+    }
+    return success;
+}
+
+
     private void clearOrder() {
         orderItems.clear();
 
@@ -567,29 +603,52 @@ showAlert(Alert.AlertType.ERROR, "Error", "Failed to load login form: " + e.getM
 
         try {
             menuDisplayCard();
+                orderItems.clear();
+    displayTotal();
+    tableView.refresh();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-    @FXML
-    private void handleRemove(ActionEvent event) {
-        OrderItem selectedItem = tableView.getSelectionModel().getSelectedItem();
-        if (selectedItem != null) {
+
+@FXML
+private void handleRemove(ActionEvent event) {
+    OrderItem selectedItem = tableView.getSelectionModel().getSelectedItem();
+    if (selectedItem != null) {
+        // Bước 1: Xóa `OrderItem` khỏi cơ sở dữ liệu
+        try (Connection connect = ConnectDB.connectDB()) {
+            String deleteOrderItemQuery = "DELETE FROM order_items WHERE order_item_id = ?";
+            try (PreparedStatement stmt = connect.prepareStatement(deleteOrderItemQuery)) {
+                stmt.setInt(1, selectedItem.getOrderItemId());
+                stmt.executeUpdate();
+            }
+
+            // Bước 2: Xóa `OrderItem` khỏi danh sách hiển thị
             orderItems.remove(selectedItem);
             displayTotal();
-        } else {
-            showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a product to remove.");
+
+            // Bước 3: Kiểm tra nếu không còn mục nào trong đơn hàng
+            if (orderItems.isEmpty()) {
+                // Xóa `Order` khỏi cơ sở dữ liệu nếu không còn mục nào
+                String deleteOrderQuery = "DELETE FROM orders WHERE order_id = ?";
+                try (PreparedStatement stmt = connect.prepareStatement(deleteOrderQuery)) {
+                    stmt.setInt(1, selectedItem.getOrderId());
+                    stmt.executeUpdate();
+                }
+                showAlert(Alert.AlertType.INFORMATION, "Order Removed", "The order has been removed as it contains no items.");
+                clearOrder(); // Xóa đơn hàng khỏi màn hình
+            } else {
+                showAlert(Alert.AlertType.INFORMATION, "Item Removed", "The selected item has been removed.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to remove the item: " + e.getMessage());
         }
+    } else {
+        showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a product to remove.");
     }
-    private ObservableList<Product> menuOrderListData;
+}
 
-    public void ShowOrderData() {
-        col_ProductName.setCellValueFactory(new PropertyValueFactory<>("productName"));
-        col_Quantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        col_Price.setCellValueFactory(new PropertyValueFactory<>("price"));
-
-        tableView.setItems(orderItems);
-    }
 
     private int getid;
 
@@ -606,22 +665,7 @@ showAlert(Alert.AlertType.ERROR, "Error", "Failed to load login form: " + e.getM
         }
     }
 
-    private void OrderDetails(Order order) {
-        StringBuilder orderDetails = new StringBuilder();
-        orderDetails.append("Order ID: ").append(order.getOrderId()).append("\n");
-        orderDetails.append("Customer ID: ").append(order.getCustomerId()).append("\n");
-        orderDetails.append("Employee ID: ").append(order.getEmployeeId()).append("\n");
-        orderDetails.append("Total Amount: $").append(order.getTotalAmount()).append("\n");
-        orderDetails.append("Order Date: ").append(order.getOrderDate()).append("\n");
-        orderDetails.append("Status: ").append(order.getStatus()).append("\n");
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Order Details");
-        alert.setHeaderText("Order ID: " + order.getOrderId());
-        alert.setContentText(orderDetails.toString());
-        alert.showAndWait();
-    }
-
+    
     public double getTotal() {
         return cardListData.stream().mapToDouble(product -> product.getPrice() * product.getQuantity()).sum();
     }

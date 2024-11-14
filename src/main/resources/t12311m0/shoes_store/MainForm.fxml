@@ -43,10 +43,10 @@
                                                 <Image url="@image/Black_Logo-removebg-preview.png" />
                                              </image>
                                           </ImageView>
-                                          <Label fx:id="accName" layoutX="14.0" layoutY="148.0" />
+                                          <Label fx:id="accName" layoutX="14.0" layoutY="148.0" textFill="WHITE" />
                                        </children>
                                     </AnchorPane>
-                                    <Button fx:id="r_r_btn" layoutX="17.0" layoutY="180.0" mnemonicParsing="false" onAction="#showMainPage" prefHeight="40.0" prefWidth="190.0" styleClass="nav-btn" stylesheets="@MainForm.css" text="Dash Board" />
+                                    <Button fx:id="r_r_btn" layoutX="17.0" layoutY="180.0" mnemonicParsing="false" onAction="#showMainPage" prefHeight="40.0" prefWidth="190.0" styleClass="nav-btn" stylesheets="@MainForm.css" text="Dash Board" textFill="WHITE" />
                                     <Button fx:id="m_f_btn" layoutX="16.0" layoutY="352.0" mnemonicParsing="false" onAction="#showCustomerManagementPage" prefHeight="40.0" prefWidth="190.0" styleClass="nav-btn" stylesheets="@MainForm.css" text="Manage Customer" />
                                     <Button layoutX="16.0" layoutY="292.0" mnemonicParsing="false" onAction="#showProductManagementPage" prefHeight="40.0" prefWidth="190.0" styleClass="nav-btn" stylesheets="@MainForm.css" text="Manage Product" />
                                     <Button fx:id="m_e_btn" layoutX="17.0" layoutY="233.0" mnemonicParsing="false" onAction="#showEmployeeManagementPage" prefHeight="40.0" prefWidth="190.0" styleClass="nav-btn" stylesheets="@MainForm.css" text="Manage Employee" />
@@ -272,7 +272,7 @@
                                     <String fx:value="radius" />
                                  </styleClass>
                                  <children>
-                                    <TableView fx:id="employeeTableView" layoutX="-53.0" layoutY="-60.0" onMouseClicked="#handleEmployeeRowSelect" prefHeight="568.0" prefWidth="578.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <TableView fx:id="employeeTableView" layoutX="-53.0" layoutY="-60.0" onMouseClicked="#handleEmployeeRowSelect" prefHeight="558.0" prefWidth="576.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="0.0">
                                        <columns>
                                           <TableColumn fx:id="col_EmployeeId" prefWidth="75.0" text="Id" />
                                           <TableColumn fx:id="col_EmployeeName" prefWidth="115.0" text="Name" />
