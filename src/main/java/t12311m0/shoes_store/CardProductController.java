@@ -5,7 +5,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -46,7 +45,7 @@ public class CardProductController {
     private Image image;
     private Order order;
     private Runnable refreshCallback;
- private ObservableList<OrderItem> orderItems;
+
     public void setOrder(Order order) {
         this.order = order;
     }
@@ -57,23 +56,38 @@ public class CardProductController {
 
     public void setData(Product prodData) {
         this.prodData = prodData;
+
+        // Set product information
         pro_name.setText(prodData.getName());
         pro_brand.setText(prodData.getBrandName());
         pro_price.setText("$" + prodData.getPrice());
         pro_size.setText(prodData.getSize());
+
+        // Load product image
         String imagePath = prodData.getImageUrl();
         if (!imagePath.startsWith("file:")) {
             imagePath = "file:" + imagePath;
         }
         try {
-            image = new Image(imagePath, 190, 94, false, true);
+            Image image = new Image(imagePath, 190, 94, false, true);
             pro_ImageView.setImage(image);
         } catch (Exception e) {
             System.out.println("Failed to load image: " + e.getMessage());
             pro_ImageView.setImage(new Image("path_to_default_image"));
         }
-    }
 
+        // Check product status
+        if (prodData.getStatus() == Product.Status.UNAVAILABLE) {
+            pro_addBtn.setDisable(true);
+            pro_addBtn.setStyle("-fx-opacity: 0.5;"); // Dim the button
+            card_form.setStyle("-fx-opacity: 0.5;");  // Dim the card
+        } else {
+            pro_addBtn.setDisable(false);
+            pro_addBtn.setStyle("-fx-opacity: 1.0;"); // Restore button appearance
+            card_form.setStyle("-fx-opacity: 1.0;"); // Restore card appearance
+        }
+    }
+    
     @FXML
     public void initialize() {
         setSpinnerValueFactory();
@@ -131,35 +145,70 @@ public class CardProductController {
                 }
             }
 
-            // Calculate total price for this item
-            double totalPrice = qty * prodData.getPrice();
+            // Check product stock
+            String checkStockQuery = "SELECT quantity, status FROM products WHERE product_id = ?";
+            try (PreparedStatement prepare = connect.prepareStatement(checkStockQuery)) {
+                prepare.setInt(1, prodData.getId());
+                try (ResultSet result = prepare.executeQuery()) {
+                    if (result.next()) {
+                        int checkStock = result.getInt("quantity");
+                        String status = result.getString("status");
 
-            // Add item to order_items without updating stock
-            String insertItemQuery = "INSERT INTO order_items (order_id, product_id, quantity, price) " +
-                    "VALUES (?, ?, ?, ?)";
-            try (PreparedStatement insertItem = connect.prepareStatement(insertItemQuery)) {
-                insertItem.setInt(1, order.getOrderId());
-                insertItem.setInt(2, prodData.getId());
-                insertItem.setInt(3, qty);
-                insertItem.setDouble(4, totalPrice);
-                insertItem.executeUpdate();
-            }
+                 if ("UNAVAILABLE".equalsIgnoreCase(status)) {
+    showAlert(Alert.AlertType.ERROR, "Error Message", "Product is unavailable.");
+    return;
+}
 
-            // Update order total
-            order.setTotalAmount(order.getTotalAmount() + totalPrice);
-            String updateOrderQuery = "UPDATE orders SET total_amount = ?, updated_at = CURRENT_TIMESTAMP " +
-                    "WHERE order_id = ?";
-            try (PreparedStatement updateOrder = connect.prepareStatement(updateOrderQuery)) {
-                updateOrder.setDouble(1, order.getTotalAmount());
-                updateOrder.setInt(2, order.getOrderId());
-                updateOrder.executeUpdate();
-            }
+if (checkStock < qty) {
+    showAlert(Alert.AlertType.ERROR, "Error Message", "Not enough stock available.");
+    return;
+}
 
-            showAlert(Alert.AlertType.INFORMATION, "Success", "Product added to order!");
 
-            // Refresh the order display
-            if (refreshCallback != null) {
-                refreshCallback.run();
+                        // Calculate total price for this item
+                        double totalPrice = qty * prodData.getPrice();
+
+                        // Add item to order_items
+                        String insertItemQuery = "INSERT INTO order_items (order_id, product_id, quantity, price) " +
+                                "VALUES (?, ?, ?, ?)";
+                        try (PreparedStatement insertItem = connect.prepareStatement(insertItemQuery)) {
+                            insertItem.setInt(1, order.getOrderId());
+                            insertItem.setInt(2, prodData.getId());
+                            insertItem.setInt(3, qty);
+                            insertItem.setDouble(4, totalPrice);
+                            insertItem.executeUpdate();
+                        }
+
+                        // Update order total
+                        order.setTotalAmount(order.getTotalAmount() + totalPrice);
+                        String updateOrderQuery = "UPDATE orders SET total_amount = ?, updated_at = CURRENT_TIMESTAMP " +
+                                "WHERE order_id = ?";
+                        try (PreparedStatement updateOrder = connect.prepareStatement(updateOrderQuery)) {
+                            updateOrder.setDouble(1, order.getTotalAmount());
+                            updateOrder.setInt(2, order.getOrderId());
+                            updateOrder.executeUpdate();
+                        }
+
+                        // Update product stock
+                        int updatedStock = checkStock - qty;
+                        String updateStockQuery = "UPDATE products SET quantity = ?, status = ? WHERE product_id = ?";
+                        try (PreparedStatement updateStock = connect.prepareStatement(updateStockQuery)) {
+                            updateStock.setInt(1, updatedStock);
+                            updateStock.setString(2, updatedStock == 0 ? "UNAVAILABLE" : "AVAILABLE");
+                            updateStock.setInt(3, prodData.getId());
+                            updateStock.executeUpdate();
+                        }
+
+                        showAlert(Alert.AlertType.INFORMATION, "Success", "Product added to order!");
+
+                        // Refresh the order display
+                        if (refreshCallback != null) {
+                            refreshCallback.run();
+                        }
+                    } else {
+                        showAlert(Alert.AlertType.ERROR, "Error", "Product not found.");
+                    }
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -167,57 +216,6 @@ public class CardProductController {
         }
     }
 
-    public void processPayment() {
-        if (order == null || order.getOrderId() == 0) {
-            showAlert(Alert.AlertType.ERROR, "Error", "No order to process.");
-            return;
-        }
-
-        // Logic for processing payment goes here
-        // Assuming payment is successful, we now update the stock
-
-        try (Connection connect = ConnectDB.connectDB()) {
-            for (OrderItem item : orderItems) {
-                // Check product stock
-                String checkStockQuery = "SELECT quantity FROM products WHERE product_id = ?";
-                try (PreparedStatement prepare = connect.prepareStatement(checkStockQuery)) {
-                    prepare.setInt(1, item.getProductId());
-                    try (ResultSet result = prepare.executeQuery()) {
-                        if (result.next()) {
-                            int currentStock = result.getInt("quantity");
-
-                            // Calculate updated stock
-                            int updatedStock = currentStock - item.getQuantity();
-                            if (updatedStock < 0) {
-                                showAlert(Alert.AlertType.ERROR, "Error Message", "Insufficient stock for product: " + item.getProductName());
-                                return;
-                            }
-
-                            // Update product stock
-                            String updateStockQuery = "UPDATE products SET quantity = ?, status = ? WHERE product_id = ?";
-                            try (PreparedStatement updateStock = connect.prepareStatement(updateStockQuery)) {
-                                updateStock.setInt(1, updatedStock);
-                                updateStock.setString(2, updatedStock == 0 ? "UNAVAILABLE" : "AVAILABLE");
-                                updateStock.setInt(3, item.getProductId());
-                                updateStock.executeUpdate();
-                            }
-                        } else {
-                            showAlert(Alert.AlertType.ERROR, "Error Message", "Product not found: " + item.getProductName());
-                            return;
-                        }
-                    }
-                }
-            }
-
-            showAlert(Alert.AlertType.INFORMATION, "Success", "Payment processed and stock updated!");
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Error", "Failed to process payment: " + e.getMessage());
-        }
-    }
-
-    // Method to show alert messages
     private void showAlert(Alert.AlertType type, String title, String content) {
         Alert alert = new Alert(type);
         alert.setTitle(title);

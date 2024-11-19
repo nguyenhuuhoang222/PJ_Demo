@@ -34,6 +34,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
 
+
 public class SalesPageController {
 
     public SalesPageController() {
@@ -673,5 +674,7 @@ private void handleRemove(ActionEvent event) {
     public void displayTotal() {
         total.setText(String.format("%.2f", getTotal()) + "$");
     }
+    
+    
 
 }

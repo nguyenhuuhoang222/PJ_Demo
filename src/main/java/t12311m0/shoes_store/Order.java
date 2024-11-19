@@ -33,6 +33,10 @@ public class Order {
         this.updatedAt = new Date(System.currentTimeMillis());
     }
 
+    Order(int orderId, int customerId, int employeeId, double totalAmount, String status, Date orderDate, Date createdAt, Date updatedAt) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
     // Getters and Setters
     public int getOrderId() {
         return orderId;

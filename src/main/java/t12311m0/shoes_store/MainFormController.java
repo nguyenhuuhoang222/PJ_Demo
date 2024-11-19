@@ -26,6 +26,9 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import javafx.util.Callback;
 
 /**
  * Shoes Store Controller for managing products.
@@ -117,6 +120,9 @@ public class MainFormController implements Initializable {
     private TableColumn<Brand, Date> col_CreatedAt; // Cột cho created_at
     @FXML
     private TableColumn<Brand, Date> col_UpdatedAt; // Cột cho updated_at
+    
+    @FXML
+private TableColumn<Customer, Void> actionsColumn;
 
     @FXML
     private TableColumn<Product, Integer> colId;
@@ -606,12 +612,6 @@ private boolean areInputsValidP(String name, Brand brand, String price, String q
         employeeGenderDd.setValue(employee.getGender());
     }
 
-    private void populateCustomerForm(Customer customer) {
-        customerNameFd.setText(customer.getCustomerName());
-        customerEmailFd.setText(customer.getEmail());
-        customerPhoneFd.setText(customer.getPhone());
-        customerGenderDd.setValue(customer.getGender());
-    }
 
     @FXML
     public void deleteProduct() {
@@ -1065,18 +1065,72 @@ private boolean areInputsValidP(String name, Brand brand, String price, String q
         customerGenderDd.setValue(null);
     }
 
-    @FXML
-    public void initializeCustomer() {
-        // Set up the columns to match Customer properties
-        col_CustomerId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
-        col_CustomerName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
-        col_CustomerEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
-        col_CustomerPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
-        col_CustomerGender.setCellValueFactory(new PropertyValueFactory<>("gender"));
+@FXML
+public void initializeCustomer() {
+    // Set up the columns to match Customer properties
+    col_CustomerId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
+    col_CustomerName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+    col_CustomerEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+    col_CustomerPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
+    col_CustomerGender.setCellValueFactory(new PropertyValueFactory<>("gender"));
 
-        // Load data into the table
-        loadCustomers();
+    // Sự kiện nhấp chuột đơn
+    customerTableView.setOnMouseClicked(event -> {
+        if (event.getClickCount() == 1) { // Kiểm tra nhấp chuột đơn
+            Customer selectedCustomer = customerTableView.getSelectionModel().getSelectedItem();
+            if (selectedCustomer != null) {
+                populateCustomerForm(selectedCustomer); // Điền thông tin khách hàng vào form hiện tại
+            }
+        } else if (event.getClickCount() == 2) { // Kiểm tra nhấp chuột đúp
+            Customer selectedCustomer = customerTableView.getSelectionModel().getSelectedItem();
+            if (selectedCustomer != null) {
+                openCustomerInformation(selectedCustomer); // Mở cửa sổ mới với thông tin chi tiết khách hàng
+            }
+        }
+    });
+}
+
+private void openCustomerInformation(Customer customer) {
+    // Open the new Customer Information window
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Customer_Information.fxml"));
+        Parent root = loader.load();
+
+        // Fetch customer orders using the customer's ID
+        List<Order> customerOrders = fetchOrdersByCustomerId(customer.getCustomerId());
+
+        // Pass customer and customerOrders to the controller of the new window
+        Customer_InformationController controller = loader.getController();
+        controller.setCustomerData(customer, customerOrders);  // Pass both customer and their orders
+
+        // Create a new Stage to open the window
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.setTitle("Customer Information");
+        stage.show();
+    } catch (IOException e) {
+        e.printStackTrace();
     }
+}
+
+
+private void populateCustomerForm(Customer customer) {
+    // Điền thông tin khách hàng vào form hiện tại
+    customerNameFd.setText(customer.getCustomerName());
+    customerEmailFd.setText(customer.getEmail());
+    customerPhoneFd.setText(customer.getPhone());
+    customerGenderDd.setValue(customer.getGender());
+}
+
+
+    private List<Order> fetchOrdersByCustomerId(int customerId) {
+        // Lấy danh sách đơn hàng của khách hàng từ cơ sở dữ liệu
+        // (Implement logic ở đây nếu cần)
+        return new ArrayList<>();
+    }
+
+
+
 
     // Sample function to load customers from database
     private void loadCustomers() {
