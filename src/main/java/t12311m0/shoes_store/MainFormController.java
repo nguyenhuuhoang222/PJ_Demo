@@ -240,7 +240,68 @@ private TableColumn<Customer, Void> actionsColumn;
         initializeCustomerGender();
         initializeBrand();
         refreshBrandComboBox();
+        loadDashboardStatistics();
     }
+    
+    @FXML
+private Label amountCustomer;
+
+@FXML
+private Label amountSoldProduct;
+
+@FXML
+private Label todayIncome;
+
+@FXML
+private Label totalIncome;
+
+@FXML
+public void loadDashboardStatistics() {
+    try (Connection conn = ConnectDB.connectDB()) {
+        // Fetch and set the total number of customers
+        int customerCount = fetchSingleIntResult(conn, "SELECT COUNT(*) AS customer_count FROM customers");
+        amountCustomer.setText(String.valueOf(customerCount));
+
+        // Fetch and set the total number of sold products
+        int totalSoldProducts = fetchSingleIntResult(conn, "SELECT SUM(quantity) AS total_sold FROM order_items");
+        amountSoldProduct.setText(String.valueOf(totalSoldProducts));
+
+        // Fetch and set today's income
+        double todayIncomeValue = fetchSingleDoubleResult(conn, "SELECT SUM(total_amount) AS today_income FROM orders WHERE DATE(order_date) = CURDATE()");
+        todayIncome.setText(formatCurrency(todayIncomeValue));
+
+        // Fetch and set total income
+        double totalIncomeValue = fetchSingleDoubleResult(conn, "SELECT SUM(total_amount) AS total_income FROM orders");
+        totalIncome.setText(formatCurrency(totalIncomeValue));
+    } catch (SQLException e) {
+        showAlert("Error", "Failed to load dashboard statistics: " + e.getMessage());
+        e.printStackTrace();
+    }
+}
+
+// Utility method to execute a query and return a single int result
+private int fetchSingleIntResult(Connection conn, String query) throws SQLException {
+    try (PreparedStatement stmt = conn.prepareStatement(query);
+         ResultSet rs = stmt.executeQuery()) {
+        return rs.next() ? rs.getInt(1) : 0;
+    }
+}
+
+// Utility method to execute a query and return a single double result
+private double fetchSingleDoubleResult(Connection conn, String query) throws SQLException {
+    try (PreparedStatement stmt = conn.prepareStatement(query);
+         ResultSet rs = stmt.executeQuery()) {
+        return rs.next() ? rs.getDouble(1) : 0.0;
+    }
+}
+
+// Utility method to format a double value as currency
+private String formatCurrency(double value) {
+    return String.format("$%.2f", value);
+}
+
+
+
 
     private void refreshBrandComboBox() {
         String query = "SELECT brand_id, brand_name FROM brands"; // Query to get brand_id and brand_name
@@ -508,13 +569,14 @@ private boolean areInputsValidP(String name, Brand brand, String price, String q
     return true;
 }
 
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
+private void showAlert(String title, String message) {
+    Alert alert = new Alert(Alert.AlertType.WARNING);
+    alert.setTitle(title);
+    alert.setHeaderText(null); // Keeps the header section blank
+    alert.setContentText(message); // Sets the main message text
+    alert.showAndWait(); // Waits for the user to close the alert
+}
+
 
     private Optional<ButtonType> showConfirmationDialog(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
